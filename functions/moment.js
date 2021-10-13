@@ -16,7 +16,7 @@ function daysToBday(unix, fuso){
     }
  }
 
- module.exports = {
+module.exports = {
     timeToString: timeToString,
     birthday: birthday,
     daysToBday: daysToBday

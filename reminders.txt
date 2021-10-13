@@ -1,4 +1,5 @@
-t- Checar se a data.json existe se não criar um arquivo com {} dentro
+ta salvando no obj e nao no data 
+- Checar se a data.json existe se não criar um arquivo com {} dentro
 
 - A cada 1 hora verificar a quanto tempo a pessoa é membro do GD e dar o cargo para permitir aceitar novos membros
 

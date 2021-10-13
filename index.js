@@ -2,6 +2,7 @@ const keepAlive = require("./keepalive");
 const {deleteFromList} = require("./functions/oldMembers");
 const {createFile, loadData, saveData} = require("./functions/data");
 const {timeToString, birthday, daysToBday} = require("./functions/moment");
+const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const Discord = require("discord.js");
 const moment = require('moment');
 moment.locale('pt-br');
@@ -62,7 +63,7 @@ client.on("ready", () => {
       }
 
       memberCounterNumber++
-      console.log(memberCounterNumber);
+      console.log(memberCounterNumber,"Members");
 
       if(!(member.user.id in data.memberList)) {
         data.memberList[member.user.id] = {};
@@ -150,6 +151,17 @@ client.on("ready", () => {
   } 
 
   if(data.memberCounter.membersNow < data.memberCounter.membersInList) deleteFromList(datafile, data, guild);
+
+  var lastUpdate = moment(Date.now()+fusotime).format('DD/MM/YYYY')
+  if (JSON.stringify(lastUpdate) !== JSON.stringify(data.lastUpdate)) {
+    data.lastUpdate = lastUpdate;
+    console.log("New data update!");
+    saveData(datafile, data);
+  } 
+  
+keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, data, datafile)
+//verificateMessages(client, )
+//waitMessagesReacts(client, )
 
 });
 
