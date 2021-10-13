@@ -44,7 +44,7 @@ const client = new Discord.Client({
 //Reload and update data.json
 client.on("ready", () => {
     const guild = client.guilds.cache.get(guildid);
-    var memberCounter = 0;
+    var memberCounterNumber = 0;
     if(!("memberList" in data)) {
       data["memberList"] = {};
       saveData(datafile, data);
@@ -61,7 +61,8 @@ client.on("ready", () => {
         }
       }
 
-      memberCounter++
+      memberCounterNumber++
+      console.log(memberCounterNumber);
 
       if(!(member.user.id in data.memberList)) {
         data.memberList[member.user.id] = {};
@@ -89,6 +90,12 @@ client.on("ready", () => {
         var veteranDate = moment(restoreMemberData("veteranTimeUnix")+fusotime).format('DD/MM/YYYY')
       }
 
+      if(restoreMemberData("veteranTimeUnix") == null){
+        var veteranString = null
+      } else {
+        var veteranString = timeToString(restoreMemberData("veteranTimeUnix"), fusotime)
+      }
+
       var veteran = restoreMemberData("veteranTimeUnix") <= Date.now();
 
       if((member.joinedTimestamp) << botrelease){
@@ -114,7 +121,7 @@ client.on("ready", () => {
          "joinString": timeToString(member.joinedTimestamp, fusotime),
          "veteranTimeUnix": restoreMemberData("veteranTimeUnix"),
          "veteranDate": veteranDate,
-         "veteranString": timeToString(restoreMemberData("veteranTimeUnix"), fusotime),
+         "veteranString": veteranString,
          "veteran": veteran,
          "authorized": restoreMemberData("authorized"),
          "authorizedTimeUnix": restoreMemberData("authorizedTimeUnix"),
@@ -124,20 +131,26 @@ client.on("ready", () => {
          "msg": restoreMemberData("msg")
       } 
 
-      if (JSON.stringify(memberdata) !== JSON.stringify(data.memberList[member.user.id])) {
-        data.memberList[member.user.id] = memberdata;
-        saveData(datafile, data);
-        console.log("z");
-      } 
-
-    data.memberCounter = {
-      "membersNow": memberCounter,
-      "membersInList": Object.keys(data.memberList).length
-    };
-
-    if(data.memberCounter.membersNow < data.memberCounter.membersInList) deleteFromList(datafile, data, guild);
-    console.log(memberCounter);
+    if (JSON.stringify(memberdata) !== JSON.stringify(data.memberList[member.user.id])) {
+      data.memberList[member.user.id] = memberdata;
+      saveData(datafile, data);
+      console.log("y");
+    }
   });
+
+  var memberCounter = {
+    "membersNow": memberCounterNumber,
+    "membersInList": Object.keys(data.memberList).length
+  };
+
+  if (JSON.stringify(memberCounter) !== JSON.stringify(data.memberCounter)) {
+    data.memberCounter = memberCounter;
+    saveData(datafile, data);
+    console.log("y");
+  } 
+
+  if(data.memberCounter.membersNow < data.memberCounter.membersInList) deleteFromList(datafile, data, guild);
+
 });
 
 
