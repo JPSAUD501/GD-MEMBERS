@@ -7,7 +7,7 @@ const botrelease = 1634688000;
 const guildid = "720275637415182416";
 const datafile = "./data.json";
 
-keepAlive();
+keepAlive(datafile);
 
 const client = new Discord.Client({
   fetchAllMembers: true,
