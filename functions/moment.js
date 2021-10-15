@@ -9,7 +9,7 @@ function birthday(unix, fuso){
 }
 
 function daysToBday(unix, fuso){
-    if(Math.ceil(moment(birthday(unix, fuso)+"/"+moment(Date.now()+fuso).year(), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true)) >= -1 ){
+    if(Math.ceil(moment(birthday(unix, fuso)+"/"+moment(Date.now()+fuso).year(), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true)) > 0 ){
       return Math.ceil(moment(birthday(unix, fuso)+"/"+moment(Date.now()+fuso).year(), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true));
     } else{
       return Math.ceil(moment(birthday(unix, fuso)+"/"+(moment(Date.now()+fuso).year()+1), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true));

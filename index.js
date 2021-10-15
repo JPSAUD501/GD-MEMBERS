@@ -1,6 +1,6 @@
 const keepAlive = require("./keepalive");
 const {deleteFromList} = require("./functions/oldMembers");
-const {createFile, loadData, saveData} = require("./functions/data");
+const {createFile, loadData, saveData, updateMemberData} = require("./functions/data");
 const {timeToString, birthday, daysToBday} = require("./functions/moment");
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const Discord = require("discord.js");
@@ -14,8 +14,6 @@ const guildid = "720275637415182416";
 keepAlive();
 
 const datafile = "./data.json";
-
-var data = loadData(datafile);
 
 const client = new Discord.Client({
   fetchAllMembers: true,
@@ -44,100 +42,21 @@ const client = new Discord.Client({
 
 //Reload and update data.json
 client.on("ready", () => {
+    var data = loadData(datafile);
     const guild = client.guilds.cache.get(guildid);
     var memberCounterNumber = 0;
     if(!("memberList" in data)) {
       data["memberList"] = {};
+      console.log("Creating member list (index)");
       saveData(datafile, data);
-      console.log("a");
     }
     guild.members.cache.each(member => {
-
-      function restoreMemberData(name){
-        data = loadData(datafile)
-        if(name in data.memberList[member.user.id]){
-          return (data.memberList[member.user.id])[name];
-        }else{
-          return null;
-        }
-      }
-
       memberCounterNumber++
       console.log(memberCounterNumber,"Members");
-
-      if(!(member.user.id in data.memberList)) {
-        data.memberList[member.user.id] = {};
-        saveData(datafile, data);
-        console.log("b");
-      }
-
-      if(restoreMemberData("authorized") == true && restoreMemberData("authorizedTimeUnix") !== null){
-        if(data.memberList[member.user.id].veteranTimeUnix !== restoreMemberData("authorizedTimeUnix")+veterantime){
-          data.memberList[member.user.id].veteranTimeUnix = restoreMemberData("authorizedTimeUnix")+veterantime;
-          saveData(datafile, data);
-          console.log("c");
-        }
-      } else if(restoreMemberData("authorized") == false){
-        if(data.memberList[member.user.id].veteranTimeUnix = "null"){
-          data.memberList[member.user.id].veteranTimeUnix = "null";
-          saveData(datafile, data);
-          console.log("e");
-        }
-      }
-      
-      if(restoreMemberData("veteranTimeUnix") == null){
-        var veteranDate = null
-      } else{
-        var veteranDate = moment(restoreMemberData("veteranTimeUnix")+fusotime).format('DD/MM/YYYY')
-      }
-
-      if(restoreMemberData("veteranTimeUnix") == null){
-        var veteranString = null
-      } else {
-        var veteranString = timeToString(restoreMemberData("veteranTimeUnix"), fusotime)
-      }
-
-      var veteran = restoreMemberData("veteranTimeUnix") <= Date.now();
-
-      if((member.joinedTimestamp) << botrelease){
-        if(restoreMemberData("authorized") !== true || restoreMemberData("legacyMember") !== true) {
-          data.memberList[member.user.id].authorized = true;
-          data.memberList[member.user.id].authorizedById = "141957307591426050";
-          data.memberList[member.user.id].authorizedByName = "JPSAUD501";
-          data.memberList[member.user.id].legacyMember = true
-          saveData(datafile, data);
-          console.log("f");
-        }
-      }
-
-      var memberdata = {
-         "id": member.user.id,
-         "user": member.user.username,
-         "noob": member._roles.includes("896257202426376192"),
-         "bot": member.user.bot,
-         "birthday": birthday(member.joinedTimestamp, fusotime),
-         "daysToBday": daysToBday(member.joinedTimestamp, fusotime),
-         "joinTimeUnix": member.joinedTimestamp,
-         "joinDate": moment(member.joinedTimestamp+fusotime).format('DD/MM/YYYY'),
-         "joinString": timeToString(member.joinedTimestamp, fusotime),
-         "veteranTimeUnix": restoreMemberData("veteranTimeUnix"),
-         "veteranDate": veteranDate,
-         "veteranString": veteranString,
-         "veteran": veteran,
-         "authorized": restoreMemberData("authorized"),
-         "authorizedTimeUnix": restoreMemberData("authorizedTimeUnix"),
-         "authorizedById": restoreMemberData("authorizedById"),
-         "authorizedByName": restoreMemberData("authorizedByName"),
-         "legacyMember": restoreMemberData("legacyMember"),
-         "msg": restoreMemberData("msg")
-      } 
-
-    if (JSON.stringify(memberdata) !== JSON.stringify(data.memberList[member.user.id])) {
-      data.memberList[member.user.id] = memberdata;
-      saveData(datafile, data);
-      console.log("y");
-    }
+      updateMemberData(member, data, datafile, botrelease, fusotime);
   });
+
+  data = loadData(datafile);
 
   var memberCounter = {
     "membersNow": memberCounterNumber,
@@ -146,8 +65,8 @@ client.on("ready", () => {
 
   if (JSON.stringify(memberCounter) !== JSON.stringify(data.memberCounter)) {
     data.memberCounter = memberCounter;
+    console.log("Saving member counter (index)");
     saveData(datafile, data);
-    console.log("y");
   } 
 
   if(data.memberCounter.membersNow < data.memberCounter.membersInList) deleteFromList(datafile, data, guild);
@@ -155,11 +74,11 @@ client.on("ready", () => {
   var lastUpdate = moment(Date.now()+fusotime).format('DD/MM/YYYY')
   if (JSON.stringify(lastUpdate) !== JSON.stringify(data.lastUpdate)) {
     data.lastUpdate = lastUpdate;
-    console.log("New data update!");
+    console.log("New day update! (index)");
     saveData(datafile, data);
   } 
   
-keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, data, datafile)
+keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, datafile)
 //verificateMessages(client, )
 //waitMessagesReacts(client, )
 
