@@ -1,15 +1,15 @@
 const {saveData} = require("./data");
 
 function deleteFromList(datafile, data, guild){
-  var id = Object.keys(data.memberList);
+  var list = Object.keys(data.memberList);
   var membros = [];
   guild.members.cache.each(member => {
     membros.push(member.id);
   })
-  for (const n in id){
-    if (!membros.includes(id[n])) {
-      console.log(data.memberList[id[n]]);
-      delete data.memberList[id[n]];
+  for (const i in list){
+    if (!membros.includes(list[i])) {
+      console.log(data.memberList[list[i]]);
+      delete data.memberList[list[i]];
       saveData(datafile, data)
     }
   }

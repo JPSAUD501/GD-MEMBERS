@@ -1,4 +1,5 @@
 const {createFile, loadData, saveData, updateMemberData} = require("./data");
+const {bday} = require("./bday");
 const moment = require('moment');
 moment.locale('pt-br');
 
@@ -39,15 +40,21 @@ function keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, dat
         
       //Last update
       data.lastUpdate = lastUpdate;
+      data.lastUpdateUnix = Date.now();
       console.log("New day update! (keepDataUpdated)");
       saveData(datafile, data);
 
       //Checking bdays
-      
+      var list = Object.keys(data.memberList);
+      for (const i in list){
+        bday(client, guildid, fusotime, data.memberList[list[i]]);
+      }
   } 
 }
 
-var interval = setInterval(function () { checkEveryMinute(); }, 30000);
+checkEveryMinute();
+var interval = setInterval(function () { checkEveryMinute(); }, 60000);
+
 }
 
 module.exports = {

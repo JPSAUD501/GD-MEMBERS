@@ -1,4 +1,5 @@
 const moment = require('moment');
+moment.locale('pt-br');
 
 function timeToString(unix, fuso){
   return moment(unix+fuso).format('LLLL');
@@ -6,6 +7,10 @@ function timeToString(unix, fuso){
 
 function birthday(unix, fuso){
   return (moment(unix+fuso).date().toString().padStart(2, '0') + "/" + (moment(unix+fuso).month()+1).toString().padStart(2, '0'));
+}
+
+function age(unix,  fuso){
+  return (moment(Date.now()+fuso).year() - moment(unix+fuso).year());
 }
 
 function daysToBday(unix, fuso){
@@ -19,5 +24,6 @@ function daysToBday(unix, fuso){
 module.exports = {
     timeToString: timeToString,
     birthday: birthday,
-    daysToBday: daysToBday
+    daysToBday: daysToBday,
+    age: age
 };

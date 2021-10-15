@@ -1,4 +1,4 @@
-const {timeToString, birthday, daysToBday} = require("./moment");
+const {timeToString, birthday, daysToBday, age} = require("./moment");
 const fs = require('fs')
 const moment = require('moment');
 moment.locale('pt-br');
@@ -76,6 +76,7 @@ function updateMemberData(member, data, datafile, botrelease, fusotime){
          "noob": member._roles.includes("896257202426376192"),
          "bot": member.user.bot,
          "birthday": birthday(member.joinedTimestamp, fusotime),
+         "age": age(member.joinedTimestamp, fusotime),
          "daysToBday": daysToBday(member.joinedTimestamp, fusotime),
          "joinTimeUnix": member.joinedTimestamp,
          "joinDate": moment(member.joinedTimestamp+fusotime).format('DD/MM/YYYY'),
