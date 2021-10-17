@@ -6,14 +6,36 @@ const fs = require('fs')
 function keepAlive(datafile) {
   server.listen(2000, () => { console.log("Server is Ready!") });
 
-  server.all('/', (req, res) => {
-  var data = loadData(datafile)
-  var membros = Object.keys(data.memberList)
-  var lista = "<h1>LISTA GDVERSARIO</h1><br>"
-  for (const i in membros){
-    lista = lista + data.memberList[membros[i]].user + " faltam " + data.memberList[membros[i]].daysToBday + " dias" + "<br><br>";
+  function html(orderby, i){
+    let data = loadData(datafile)
+    let membros = Object.keys(data.memberList)
+    let lista = []
+    for (const i in membros){
+      lista.push(data.memberList[membros[i]]);
+    }
+    if(!i){
+      lista.sort(function(a, b){
+        return (a[orderby] - b[orderby]) 
+      });
+    } else{
+      lista.sort(function(a, b){
+        return (b[orderby] - a[orderby]) 
+      });
+    }
+    let txt = ""
+    lista.forEach(function(member){
+      txt = txt + `<a href=\"${member.avatarUrl}\"><img border=\"0\" alt=\"${member.user}\" src=\"${member.avatarUrl}\" width=\"100\" height=\"100\"></a><br>` +"Membro: \"" + member.user + "\"<br>Faltam: " + member.daysToBday + " dias" + "<br>Entrou: " + member.joinString + "<br>Há: " + member.memberSinceDays + " dias" + "<br><br>";
+    });
+    return txt;
   }
-  res.send(lista)
+  
+  server.all('/', (req, res) => {
+    let titulo = "<h1>LISTA GDVERSARIO</h1>"
+    res.send(titulo + html("daysToBday", false))
+  })
+  server.all('/sincedays', (req, res) => {
+    let titulo = "<h1>LISTA GDVERSARIO</h1>"
+    res.send(titulo + html("memberSincePlusTime", true))
   })
 }
 

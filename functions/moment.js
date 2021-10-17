@@ -13,6 +13,12 @@ function age(unix,  fuso){
   return (moment(Date.now()+fuso).year() - moment(unix+fuso).year());
 }
 
+function sinceDays(unix,  fuso){
+  let a = moment(moment(Date.now()+fuso).format('DD/MM/YYYY'), 'DD/MM/YYYY');
+  let b = moment(moment(unix+fuso).format('DD/MM/YYYY'), 'DD/MM/YYYY');
+  return a.diff(b, "days");
+}
+
 function daysToBday(unix, fuso){
     if(Math.ceil(moment(birthday(unix, fuso)+"/"+moment(Date.now()+fuso).year(), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true)) > 0 ){
       return Math.ceil(moment(birthday(unix, fuso)+"/"+moment(Date.now()+fuso).year(), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true));
@@ -25,5 +31,6 @@ module.exports = {
     timeToString: timeToString,
     birthday: birthday,
     daysToBday: daysToBday,
-    age: age
+    age: age,
+    sinceDays: sinceDays,
 };

@@ -1,11 +1,3 @@
-ta salvando no obj e nao no data 
-- Checar se a data.json existe se não criar um arquivo com {} dentro
-
-- A cada 1 hora verificar a quanto tempo a pessoa é membro do GD e dar o cargo para permitir aceitar novos membros
-
-Lista de membros para serem aprovados
-ideia( 
-  embed com todas as aprovacoes pendentes, o mod escreve o nome, id index ou nick da pessoa assim ela é aprovada
+- A cada 1 dia verificar a quanto tempo a pessoa é membro do GD e dar o cargo para permitir aceitar novos membros
 
   uma msg para cada aprovacao pendente com reações 
-)

@@ -12,15 +12,10 @@ function keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, dat
       //New day! Checking everything and send messages!
       const guild = client.guilds.cache.get(guildid);
       var memberCounterNumber = 0;
-      if(!("memberList" in data)) {
-        data["memberList"] = {};
-        console.log("Creating member list (index)");
-        saveData(datafile, data);
-      }
       guild.members.cache.each(member => {
         memberCounterNumber++
         console.log(memberCounterNumber,"Members");
-        updateMemberData(member, data, datafile, botrelease, fusotime);
+        updateMemberData(member, data, datafile, botrelease, fusotime, veterantime, guildid, client);
       });
 
       data = loadData(datafile);
@@ -32,7 +27,7 @@ function keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, dat
 
       if (JSON.stringify(memberCounter) !== JSON.stringify(data.memberCounter)) {
         data.memberCounter = memberCounter;
-        console.log("Saving member counter (index)");
+        console.log("Saving member counter (keepDataUpdated)");
         saveData(datafile, data);
       } 
 
@@ -47,10 +42,10 @@ function keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, dat
       //Checking bdays
       var list = Object.keys(data.memberList);
       for (const i in list){
-        bday(client, guildid, fusotime, data.memberList[list[i]]);
+        bday(client, guildid, fusotime, datafile, data.memberList[list[i]]);
       }
-  } 
-}
+    } 
+  }
 
 checkEveryMinute();
 var interval = setInterval(function () { checkEveryMinute(); }, 60000);

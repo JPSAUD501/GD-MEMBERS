@@ -1,4 +1,4 @@
-const {timeToString, birthday, daysToBday, age} = require("./moment");
+const {timeToString, birthday, daysToBday, age, sinceDays} = require("./moment");
 const fs = require('fs')
 const moment = require('moment');
 moment.locale('pt-br');
@@ -20,7 +20,7 @@ function saveData(datafile, data){
   console.log("Saved!")
 }
 
-function updateMemberData(member, data, datafile, botrelease, fusotime){
+function updateMemberData(member, data, datafile, botrelease, fusotime, veterantime, guildid, client){
 
       function restoreMemberData(name){
         dataf = loadData(datafile)
@@ -31,10 +31,16 @@ function updateMemberData(member, data, datafile, botrelease, fusotime){
         }
       }
 
+      if(!("memberList" in data)) {
+        data["memberList"] = {};
+        console.log("Creating member list (data)");
+        saveData(datafile, data);
+      }
+
       if(!(member.user.id in data.memberList)) {
         data.memberList[member.user.id] = {};
         saveData(datafile, data);
-        console.log("b");
+        console.log("Creating new member data in json (data)");
       }
 
       if(restoreMemberData("authorized") == true && restoreMemberData("authorizedTimeUnix") !== null){
@@ -59,7 +65,7 @@ function updateMemberData(member, data, datafile, botrelease, fusotime){
 
       var veteran = restoreMemberData("veteranTimeUnix") <= Date.now();
 
-      if((member.joinedTimestamp) << botrelease){
+      if((member.joinedTimestamp) < botrelease){
         if(restoreMemberData("authorized") !== true || restoreMemberData("legacyMember") !== true) {
           data.memberList[member.user.id].authorized = true;
           data.memberList[member.user.id].authorizedById = "141957307591426050";
@@ -73,10 +79,13 @@ function updateMemberData(member, data, datafile, botrelease, fusotime){
       var memberdata = {
          "id": member.user.id,
          "user": member.user.username,
-         "noob": member._roles.includes("896257202426376192"),
+         "noob": (!member._roles.includes("721660842176806965") || member._roles.includes("896257202426376192")) ,
          "bot": member.user.bot,
          "birthday": birthday(member.joinedTimestamp, fusotime),
+         "lastBdayMsg": restoreMemberData("lastBdayMsg"),
          "age": age(member.joinedTimestamp, fusotime),
+         "memberSinceDays": sinceDays(member.joinedTimestamp, fusotime),
+         "memberSincePlusTime": (sinceDays(member.joinedTimestamp, fusotime)) + parseFloat((0.235959 - parseFloat(moment(member.joinedTimestamp+fusotime).format('HHmmss'))/1000000).toFixed(6)),
          "daysToBday": daysToBday(member.joinedTimestamp, fusotime),
          "joinTimeUnix": member.joinedTimestamp,
          "joinDate": moment(member.joinedTimestamp+fusotime).format('DD/MM/YYYY'),
@@ -90,13 +99,20 @@ function updateMemberData(member, data, datafile, botrelease, fusotime){
          "authorizedById": restoreMemberData("authorizedById"),
          "authorizedByName": restoreMemberData("authorizedByName"),
          "legacyMember": restoreMemberData("legacyMember"),
-         "msg": restoreMemberData("msg")
+         "avatarUrl": member.displayAvatarURL(),
+         "msgId": restoreMemberData("msgId"),
       } 
 
     if (JSON.stringify(memberdata) !== JSON.stringify(data.memberList[member.user.id])) {
       data.memberList[member.user.id] = memberdata;
       console.log("Updating member data (data)");
       saveData(datafile, data);
+    }
+    
+    if(memberdata.authorized == true && !member._roles.includes("721660842176806965") && !member._roles.includes("721650485131477005")){
+      console.log("Add MEMBER role to member! (data)");
+      var role = member.guild.roles.cache.get("721660842176806965");
+      member.roles.add(role);
     }
   }
 
