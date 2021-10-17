@@ -47,7 +47,7 @@ function buttonClicked(client, interaction, datafile, guildid){
 
     //Member data update
     var role = guild.roles.cache.get("721660842176806965");
-    member.roles.add(role);
+    user.roles.add(role);
     data.memberList[interaction.customId].authorized = true
     data.memberList[interaction.customId].authorizedTimeUnix = Date.now();
     data.memberList[interaction.customId].authorizedById = interaction.user.id;
@@ -56,7 +56,7 @@ function buttonClicked(client, interaction, datafile, guildid){
     saveData(datafile, data);
 
     var embed = new MessageEmbed()
-              .setTitle(`Parabéns ${user.username}!`)
+              .setTitle(`Parabéns ${user.user.username}!`)
               .setColor(255)
               .setThumbnail(user.displayAvatarURL())
               .setDescription(`Você foi autorizado por ${interaction.user.username}!`);
