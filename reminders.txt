@@ -1,3 +1,0 @@
-- A cada 1 dia verificar a quanto tempo a pessoa é membro do GD e dar o cargo para permitir aceitar novos membros
-
-  uma msg para cada aprovacao pendente com reações 

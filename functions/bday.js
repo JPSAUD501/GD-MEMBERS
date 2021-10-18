@@ -23,8 +23,7 @@ function bday(client, guildid, fusotime, datafile, member){
             .setDescription(`Há ${member.memberSinceDays} dias ${member.user} se juntava ao Grupo Disparate!`)
             .addField("Se tornou membro do GD:", `${member.joinString}`, true);
 
-      client.channels.cache.get(process.env['channelbday']).send(`<@${member.id}>`);
-      client.channels.cache.get(process.env['channelbday']).send({embeds: [embed]});
+      client.channels.cache.get(process.env['channelbday']).send({content: `<@${member.id}>`, embeds: [embed]});
 
       var data = loadData(datafile)
       data.memberList[member.id].lastBdayMsg = todayyear;

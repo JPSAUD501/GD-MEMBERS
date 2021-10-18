@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+*{
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    left: 0;
+    right: 0;
+    background-color: #3d048c;
+}
+
+header{
+    width: 100%;
+}
+
+header nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: #fff;
+    border-radius: 0 0 35px 35px;
+    height: 100%;
+    padding: 0 100px 10px;
+}
+
+header nav .title h1{
+    font-size: 1.5em;
+}
+
+header nav .avatar-main{
+    padding-top: 10px;
+}
+
+header nav .avatar-main img{
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+}
+
+main{
+    background-color: #fff;
+    margin: 100px;
+    border-radius: 50px;
+}
+
+main .main-area{
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 3px;
+    justify-items: center;
+    align-items: center;
+}
+
+main .main .search-area{
+    background-color: #ddd;
+    border-radius: 50px 50px 0 0 ;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}
+
+
+main .main .search-area form .sort-select, main .main .search-area .search{
+    padding: 5px 15px;
+    border-radius: 50px;
+    margin-left: 60px;
+}
+
+main .main .search-area .search{
+    width: 250px;
+}
+
+main .main .search-area #btn{
+    padding: 5px 15px;
+    border-radius: 50px;
+    margin-left: 10px;
+}

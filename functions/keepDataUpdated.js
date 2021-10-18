@@ -3,7 +3,7 @@ const {bday} = require("./bday");
 const moment = require('moment');
 moment.locale('pt-br');
 
-function keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, datafile){
+function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
   function checkEveryMinute () {
     console.log('Checking!');
     var data = loadData(datafile);
@@ -15,7 +15,7 @@ function keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, dat
       guild.members.cache.each(member => {
         memberCounterNumber++
         console.log(memberCounterNumber,"Members");
-        updateMemberData(member, data, datafile, botrelease, fusotime, veterantime, guildid, client);
+        updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client);
       });
 
       data = loadData(datafile);
@@ -44,7 +44,10 @@ function keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, dat
       for (const i in list){
         bday(client, guildid, fusotime, datafile, data.memberList[list[i]]);
       }
-    } 
+
+      //BKP data.json
+      client.channels.cache.get(process.env['channelbkp']).send({content:`BKP - ${moment(Date.now()+fusotime).format('DD/MM/YYYY')}`, files: ["./"+datafile]});
+    }
   }
 
 checkEveryMinute();

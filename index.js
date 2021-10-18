@@ -7,7 +7,7 @@ const veterantime = 2592000;
 const fusotime = -10800000;
 const botrelease = 1634452922000;
 const guildid = "720275637415182416";
-const datafile = "./data.json";
+const datafile = "./gdversario/data.json";
 
 keepAlive(datafile);
 
@@ -38,7 +38,7 @@ const client = new Discord.Client({
 
 client.on("ready", () => {
 
-  keepDataUpdated(client, veterantime, fusotime, botrelease, guildid, datafile)
+  keepDataUpdated(client, fusotime, botrelease, guildid, datafile)
   //verificateMessages(client, )
   //waitMessagesReacts(client, )
 
@@ -52,7 +52,7 @@ client.on('guildMemberAdd', member => {
     console.log("Member alrady in the data, deleting! (index)")
     saveData(datafile, data)
   }
-  updateMemberData(member, data, datafile, botrelease, veterantime, fusotime)
+  updateMemberData(member, data, datafile, botrelease, fusotime)
   newMember(client, guildid, member, datafile);
 });
 

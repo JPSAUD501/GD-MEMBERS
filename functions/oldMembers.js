@@ -2,12 +2,12 @@ const {saveData} = require("./data");
 
 function deleteFromList(datafile, data, guild){
   var list = Object.keys(data.memberList);
-  var membros = [];
+  var allmembers = [];
   guild.members.cache.each(member => {
-    membros.push(member.id);
+    allmembers.push(member.id);
   })
   for (const i in list){
-    if (!membros.includes(list[i])) {
+    if (!allmembers.includes(list[i])) {
       console.log(data.memberList[list[i]]);
       if(data.memberList[list[i].msgId){
         var channel = message.guild.channels.cache.get(process.env["mainchnnel"]);

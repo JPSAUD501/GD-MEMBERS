@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+*{
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card{
+    width: 500px;
+    background-color: rgb(231, 231, 231);
+    border-radius: 25px;
+    margin: 30px;
+    overflow: hidden;
+}
+
+.main-card{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.main-card .avatar-card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35%;
+}
+
+.main-card .avatar-card .profile-avatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.main-card .name-card{
+    width: 65%;
+}
+
+.main-card .name-card .profile-name{
+    font-size: 2em;
+}
+
+.card .statistic{
+    background-color: #393939;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.statistic, .table-statistic{
+    border-radius: 0 0 25px;
+}
+
+.table-statistic{
+    border-collapse: collapse;
+}
+
+.table-statistic th,
+.table-statistic td{
+    padding: 0 0.5em;
+}
+
+.table-statistic th{
+    text-align: right;
+    width: 35%;
+    background-color: #3d048c;
+    color: #fff;
+}
+
+.table-statistic td {
+    width: 65%;
+    color: #fff;
+}

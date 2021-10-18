@@ -1,5 +1,6 @@
 const {loadData} = require("./functions/data");
 const express = require("express");
+const path = require('path');
 const server = express();
 const fs = require('fs')
  
@@ -24,18 +25,22 @@ function keepAlive(datafile) {
     }
     let txt = ""
     lista.forEach(function(member){
-      txt = txt + `<a href=\"${member.avatarUrl}\"><img border=\"0\" alt=\"${member.user}\" src=\"${member.avatarUrl}\" width=\"100\" height=\"100\"></a><br>` +"Membro: \"" + member.user + "\"<br>Faltam: " + member.daysToBday + " dias" + "<br>Entrou: " + member.joinString + "<br>Há: " + member.memberSinceDays + " dias" + "<br><br>";
+      txt += `<a href=\"${member.avatarUrl}\"><img border=\"0\" alt=\"${member.user}\" src=\"${member.avatarUrl}\" width=\"100\" height=\"100\"></a><br>` +"Membro: \"" + member.user + "\"<br>Faltam: " + member.daysToBday + " dias" + "<br>Entrou: " + member.joinString + "<br>Há: " + member.memberSinceDays + " dias" + "<br><br>";
     });
     return txt;
   }
   
   server.all('/', (req, res) => {
     let titulo = "<h1>LISTA GDVERSARIO</h1>"
-    res.send(titulo + html("daysToBday", false))
+    res.send(titulo + html("daysToBday", false));
   })
   server.all('/sincedays', (req, res) => {
     let titulo = "<h1>LISTA GDVERSARIO</h1>"
-    res.send(titulo + html("memberSincePlusTime", true))
+    res.send(titulo + html("memberSincePlusTime", true));
+  })
+  server.all('/beta', (req, res) => {
+    server.use(express.static(__dirname + '/gdversario'));
+    res.sendFile(path.join(__dirname,'','gdversario/index.html'));
   })
 }
 
