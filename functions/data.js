@@ -142,26 +142,26 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
       }
 
       if(sinceDays(member.joinedTimestamp, fusotime) == null){
-        if(restoreMemberData("pointsMax") !== pointsMaxLvl(member) + 0){
-          data.memberList[member.user.id].pointsMax = pointsMaxLvl(member) + 0;
-          console.log("Updating pointsMax (data)")
-          saveData(datafile, data);
-        }
-      } else if(sinceDays(member.joinedTimestamp, fusotime) >= 0){
-        if(restoreMemberData("pointsMax") !== pointsMaxLvl(member) + 1){
-          data.memberList[member.user.id].pointsMax = pointsMaxLvl(member) + 1;
+        if(restoreMemberData("pointsMax") !== pointsMaxLvl(member)){
+          data.memberList[member.user.id].pointsMax = pointsMaxLvl(member);
           console.log("Updating pointsMax (data)")
           saveData(datafile, data);
         }
       } else if(sinceDays(member.joinedTimestamp, fusotime) >= 15){
-        if(restoreMemberData("pointsMax") !== pointsMaxLvl(member) + 2){
-          data.memberList[member.user.id].pointsMax = pointsMaxLvl(member) + 2;
+        if(restoreMemberData("pointsMax") !== (pointsMaxLvl(member) + 2)){
+          data.memberList[member.user.id].pointsMax = (pointsMaxLvl(member) + 2);
+          console.log("Updating pointsMax (data)")
+          saveData(datafile, data);
+        }
+      } else if(sinceDays(member.joinedTimestamp, fusotime) >= 0){
+        if(restoreMemberData("pointsMax") !== (pointsMaxLvl(member) + 1)){
+          data.memberList[member.user.id].pointsMax = (pointsMaxLvl(member) + 1);
           console.log("Updating pointsMax (data)")
           saveData(datafile, data);
         }
       } else {
-        if(restoreMemberData("pointsMax") !== pointsMaxLvl(member) + 0){
-          data.memberList[member.user.id].points = pointsMaxLvl(member) + 0;
+        if(restoreMemberData("pointsMax") !== pointsMaxLvl(member)){
+          data.memberList[member.user.id].points = pointsMaxLvl(member);
           console.log("Updating pointsMax (data)")
           saveData(datafile, data);
         }
