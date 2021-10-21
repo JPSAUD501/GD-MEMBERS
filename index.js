@@ -2,12 +2,13 @@ const keepAlive = require("./keepalive");
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
 const {loadData, saveData, updateMemberData} = require("./functions/data");
+const {callName} = require("./functions/features");
 const Discord = require("discord.js");
 const veterantime = 2592000;
 const fusotime = -10800000;
 const botrelease = 1634452922000;
 const guildid = "720275637415182416";
-const datafile = "./gdversario/data.json";
+const datafile = "./site/data.json";
 
 keepAlive(datafile);
 
@@ -36,28 +37,31 @@ const client = new Discord.Client({
       ]
 });
 
+
+
 client.on("ready", () => {
 
-  keepDataUpdated(client, fusotime, botrelease, guildid, datafile)
-  //verificateMessages(client, )
-  //waitMessagesReacts(client, )
+  keepDataUpdated(client, fusotime, botrelease, guildid, datafile);
+  callName(client, guildid, datafile, fusotime);
 
 });
+
+
 
 client.on('guildMemberAdd', member => {
-  var data = loadData(datafile);
-  if (data.memberList[member.id]) {
-    console.log("New member in guild but its alrady in the data. Deleting:", data.memberList[member.id].user);
-    delete data.memberList[member.id];
-    console.log("Member alrady in the data, deleting! (index)")
-    saveData(datafile, data)
-  }
-  updateMemberData(member, data, datafile, botrelease, fusotime)
-  newMember(client, guildid, member, datafile);
+
+  newMember(client, guildid, member, datafile, fusotime, botrelease);
+
 });
 
+
+
 client.on('interactionCreate', interaction => {
+
   buttonClicked(client, interaction, datafile, guildid);
+
 });
+
+
 
 client.login(process.env['token']);

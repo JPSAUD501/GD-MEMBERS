@@ -3,6 +3,30 @@ const fs = require('fs')
 const moment = require('moment');
 moment.locale('pt-br');
 
+
+const lvl01 = "728073881725829182";
+const lvl10 = "768683585581350932";
+const lvl20 = "728072500801568853";
+const lvl30 = "728076146046140486";
+const lvl40 = "771066884136894484";
+const lvl50 = "771067779742040134";
+const lvl60 = "790490003116654602";
+const lvl70 = "790491464584265798";
+const lvl80 = "795537757564829716";
+const lvl90 = "795537854415110174";
+const lvl100 = "795538070707240992";
+const lvl110 = "826153614581694504";
+const lvl120 = "830948266672783381";
+const lvl130 = "830948556885721148";
+const lvl140 = "830948577793671228";
+const lvl150 = "830948584152367104";
+const lvl160 = "830948589168885800";
+const lvl170 = "830948593241817088";
+const lvl180 = "830948598510256159";
+const lvl190 = "830948602649640990";
+const lvl200 = "830948607061786674";
+
+
 function createFile(datafile){
   fs.writeFileSync(("./"+datafile), ("{}"));
 }
@@ -20,11 +44,61 @@ function saveData(datafile, data){
   console.log("Saved!")
 }
 
+function memberLevel(member){
+  if(member.user.id == process.env["ownerid"]){
+    return 200;
+  } else if(member._roles.includes(lvl01)){
+    return 1;
+  } else if(member._roles.includes(lvl10)){
+    return 10;
+  } else if(member._roles.includes(lvl20)){
+    return 20;
+  } else if(member._roles.includes(lvl30)){
+    return 30;
+  } else if(member._roles.includes(lvl40)){
+    return 40;
+  } else if(member._roles.includes(lvl50)){
+    return 50;
+  } else if(member._roles.includes(lvl60)){
+    return 60;
+  } else if(member._roles.includes(lvl70)){
+    return 70;
+  } else if(member._roles.includes(lvl80)){
+    return 80;
+  } else if(member._roles.includes(lvl90)){
+    return 90;
+  } else if(member._roles.includes(lvl100)){
+    return 100;
+  } else if(member._roles.includes(lvl110)){
+    return 110;
+  } else if(member._roles.includes(lvl120)){
+    return 120;
+  } else if(member._roles.includes(lvl130)){
+    return 130;
+  } else if(member._roles.includes(lvl140)){
+    return 140;
+  } else if(member._roles.includes(lvl150)){
+    return 150;
+  } else if(member._roles.includes(lvl160)){
+    return 160;
+  } else if(member._roles.includes(lvl170)){
+    return 170;
+  } else if(member._roles.includes(lvl180)){
+    return 180;
+  } else if(member._roles.includes(lvl190)){
+    return 190;
+  } else if(member._roles.includes(lvl200)){
+    return 200;
+  } else {
+    return 0;
+  }
+}
+
 function updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client){
 
       function restoreMemberData(name){
         dataf = loadData(datafile)
-        if(name in dataf.memberList[member.user.id]){
+         if(name in dataf.memberList[member.user.id]){
           return (dataf.memberList[member.user.id])[name];
         }else{
           return null;
@@ -32,32 +106,10 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
       }
 
       function pointsMaxLvl(member){
-          var lvl01 = "728073881725829182";
-          var lvl10 = "768683585581350932";
-          var lvl20 = "728072500801568853";
-          var lvl30 = "728076146046140486";
-          var lvl40 = "771066884136894484";
-          var lvl50 = "771067779742040134";
-          var lvl60 = "790490003116654602";
-          var lvl70 = "790491464584265798";
-          var lvl80 = "795537757564829716";
-          var lvl90 = "795537854415110174";
-          var lvl100 = "795538070707240992";
-          var lvl110 = "826153614581694504";
-          var lvl120 = "830948266672783381";
-          var lvl130 = "830948556885721148";
-          var lvl140 = "830948577793671228";
-          var lvl150 = "830948584152367104";
-          var lvl160 = "830948589168885800";
-          var lvl170 = "830948593241817088";
-          var lvl180 = "830948598510256159";
-          var lvl190 = "830948602649640990";
-          var lvl200 = "830948607061786674";
-
                  if(member._roles.includes(lvl01)){
             return 0;
           } else if(member._roles.includes(lvl10)){
-            return 0;
+            return 1;
           } else if(member._roles.includes(lvl20)){
             return 1;
           } else if(member._roles.includes(lvl30)){
@@ -130,39 +182,46 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
           data.memberList[member.user.id].authorized = true;
           data.memberList[member.user.id].authorizedById = "141957307591426050";
           data.memberList[member.user.id].authorizedByName = "JPSAUD501";
-          data.memberList[member.user.id].legacyMember = true
+          data.memberList[member.user.id].legacyMember = true;
           console.log("Legacy member detected (data)");
           saveData(datafile, data);
         }
       } else if(restoreMemberData("authorized") == true && (restoreMemberData("authorizedById") == null)){
         data.memberList[member.user.id].authorizedById = client.user.id;
         data.memberList[member.user.id].authorizedByName = client.user.username;
+        data.memberList[member.user.id].legacyMember = false;
         console.log("Member missing authorizedById updating to bot id and name (data)");
+        saveData(datafile, data);
+      } else {
+        data.memberList[member.user.id].legacyMember = false;
+        console.log("Not legacyMember (data)");
         saveData(datafile, data);
       }
 
       if(sinceDays(member.joinedTimestamp, fusotime) == null){
         if(restoreMemberData("pointsMax") !== pointsMaxLvl(member)){
           data.memberList[member.user.id].pointsMax = pointsMaxLvl(member);
-          console.log("Updating pointsMax (data)")
+          data.memberList[member.user.id].points = pointsMaxLvl(member);
+          console.log("1 - Updating points and pointsMax (data)")
           saveData(datafile, data);
         }
       } else if(sinceDays(member.joinedTimestamp, fusotime) >= 15){
         if(restoreMemberData("pointsMax") !== (pointsMaxLvl(member) + 2)){
           data.memberList[member.user.id].pointsMax = (pointsMaxLvl(member) + 2);
-          console.log("Updating pointsMax (data)")
+          console.log("2 - Updating pointsMax (data)")
           saveData(datafile, data);
         }
-      } else if(sinceDays(member.joinedTimestamp, fusotime) >= 0){
+      } else if(sinceDays(member.joinedTimestamp, fusotime) >= 1){
         if(restoreMemberData("pointsMax") !== (pointsMaxLvl(member) + 1)){
           data.memberList[member.user.id].pointsMax = (pointsMaxLvl(member) + 1);
-          console.log("Updating pointsMax (data)")
+          console.log("3 - Updating pointsMax (data)")
           saveData(datafile, data);
         }
       } else {
-        if(restoreMemberData("pointsMax") !== pointsMaxLvl(member)){
+        if((restoreMemberData("pointsMax") !== pointsMaxLvl(member))){
+          data.memberList[member.user.id].pointsMax = pointsMaxLvl(member);
           data.memberList[member.user.id].points = pointsMaxLvl(member);
-          console.log("Updating pointsMax (data)")
+          console.log("4 - Updating points and pointsMax (data)")
           saveData(datafile, data);
         }
       }
@@ -228,5 +287,6 @@ module.exports = {
     createFile: createFile,
     loadData: loadData,
     saveData: saveData,
+    memberLevel: memberLevel,
     updateMemberData: updateMemberData
 };
