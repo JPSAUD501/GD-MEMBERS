@@ -62,6 +62,6 @@ client.on('interactionCreate', interaction => {
 
 });
 
-
+client.on("error", () => { client.login(process.env['token']) });
 
 client.login(process.env['token']);

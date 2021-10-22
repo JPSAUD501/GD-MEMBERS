@@ -177,13 +177,13 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
         }
       }
 
-      if((member.joinedTimestamp) < botrelease){
+      if((member.joinedTimestamp < botrelease) || member.user.bot){
         if(restoreMemberData("authorized") !== true || restoreMemberData("legacyMember") !== true) {
           data.memberList[member.user.id].authorized = true;
           data.memberList[member.user.id].authorizedById = "141957307591426050";
           data.memberList[member.user.id].authorizedByName = "JPSAUD501";
           data.memberList[member.user.id].legacyMember = true;
-          console.log("Legacy member detected (data)");
+          console.log("Legacy member or bot detected (data)");
           saveData(datafile, data);
         }
       } else if(restoreMemberData("authorized") == true && (restoreMemberData("authorizedById") == null)){

@@ -14,6 +14,8 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
   }
   updateMemberData(member, data, datafile, botrelease, fusotime);
 
+  if(member.user.bot) return;
+
   const guild = client.guilds.cache.get(guildid);
   guild.members.fetch(member.user.id).then((user) => {
   console.log("Novo membro! (newMember)")
@@ -73,7 +75,7 @@ function buttonClicked(client, interaction, datafile, guildid){
     if(user.user.id !== data.memberList[interaction.customId].id) return console.log("(newMember) (1) Error wrong id:", user.user.username, data.memberList[interaction.customId].user);
     if(user.user.id !== interaction.customId) return console.log("(newMember) (2) Error wrong id:", user.user.id, interaction.customId);
     if(user._roles.includes("721660842176806965")){
-      interaction.reply({content:`<@${interaction.customId}> Esse membro já foi autorizado!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      interaction.reply({content:`<@${interaction.user.id}> O membro que você tentou autorizar já foi aprovado!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
       interaction.message.delete();
       return console.log("(newMember) Error: Alredy MEMBER");
     } 
@@ -119,7 +121,13 @@ function buttonClicked(client, interaction, datafile, guildid){
     interaction.message.edit({ content: `<@${interaction.customId}>`, embeds: [embed], components: [row] });
     interaction.reply({content:`O membro <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
     setTimeout(function(){ interaction.message.delete() }, 60000);
-  });
+  }).catch(function(error){
+      console.log(error);
+      interaction.reply({content:`<@${interaction.user.id}> Esse membro não está mais presente no seridor! Convide ele novamente!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      interaction.message.delete();
+      return console.log("(newMember) Error: Member exit the server");
+    }
+  );
 }
 
 module.exports = {
