@@ -1,7 +1,5 @@
 const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js')
 const {loadData, saveData, updateMemberData} = require("./data");
-//const moment = require('moment');
-//moment.locale('pt-br');
 
 async function newMember(client, guildid, member, datafile, fusotime, botrelease){
   var data = loadData(datafile);

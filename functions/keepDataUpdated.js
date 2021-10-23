@@ -1,5 +1,6 @@
 const {createFile, loadData, saveData, updateMemberData} = require("./data");
 const {bday} = require("./bday");
+const {deleteFromList} = require("./oldMembers")
 const moment = require('moment');
 moment.locale('pt-br');
 
@@ -31,7 +32,7 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
         saveData(datafile, data);
       } 
 
-      if(data.memberCounter.membersNow < data.memberCounter.membersInList) deleteFromList(datafile, data, guild);
+      if(data.memberCounter.membersNow < data.memberCounter.membersInList) deleteFromList(datafile, data, guildid, client);
         
       //Last update
       data.lastUpdate = lastUpdate;

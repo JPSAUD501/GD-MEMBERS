@@ -3,6 +3,7 @@ const {birthday} = require("./moment");
 
 function callName(client, guildid, datafile, fusotime){
   function everyMinute(){
+  try{
     var guild = client.guilds.cache.get(guildid);
     guild.channels.cache.forEach(channel => {
       if(channel.parentId !== "720275637415182420") return;
@@ -19,6 +20,7 @@ function callName(client, guildid, datafile, fusotime){
         }
       });
     });
+  }catch(e){console.log(e)}
   }
   var loop = setInterval(function(){ everyMinute(); }, 10000);
 }

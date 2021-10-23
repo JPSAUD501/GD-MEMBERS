@@ -192,7 +192,7 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
         data.memberList[member.user.id].legacyMember = false;
         console.log("Member missing authorizedById updating to bot id and name (data)");
         saveData(datafile, data);
-      } else {
+      } else if(restoreMemberData("legacyMember") !== false){
         data.memberList[member.user.id].legacyMember = false;
         console.log("Not legacyMember (data)");
         saveData(datafile, data);
