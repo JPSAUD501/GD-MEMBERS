@@ -1,15 +1,21 @@
 const {saveData} = require("./data");
 
-function deleteFromList(datafile, data, guild){
-  var id = Object.keys(data.memberList);
-  var membros = [];
+function deleteFromList(datafile, data, guildid, client){
+const guild = client.guilds.cache.get(guildid);
+  var list = Object.keys(data.memberList);
+  var allmembers = [];
   guild.members.cache.each(member => {
-    membros.push(member.id);
+    allmembers.push(member.id);
   })
-  for (const n in id){
-    if (!membros.includes(id[n])) {
-      console.log(data.memberList[id[n]]);
-      delete data.memberList[id[n]];
+  for (const i in list){
+    if (!allmembers.includes(list[i])) {
+      console.log(data.memberList[list[i]]);
+      if(data.memberList[list[i]].msgId){
+        var channel = guild.channels.cache.get(process.env["mainchnnel"]);
+        try{channel.fetchMessage(data.memberList[list[i]].msgId).then(msg => msg.delete());}catch{}
+      }
+      delete data.memberList[list[i]];
+      console.log("Deleting old member from data (oldMember)")
       saveData(datafile, data)
     }
   }
