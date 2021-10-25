@@ -9,8 +9,16 @@ function birthday(unix, fuso){
   return (moment(unix+fuso).date().toString().padStart(2, '0') + "/" + (moment(unix+fuso).month()+1).toString().padStart(2, '0'));
 }
 
+function md(unix, fuso){
+  return ((moment(unix+fuso).month()+1).toString().padStart(2, '0') + "/" + moment(unix+fuso).date().toString().padStart(2, '0'));
+}
+
 function age(unix,  fuso){
-  return (moment(Date.now()+fuso).year() - moment(unix+fuso).year());
+  if(parseInt(md(unix, fuso).replace(/\//gi, "")) >= parseInt(md(Date.now(), fuso).replace(/\//gi, ""))){
+    return (moment(Date.now()+fuso).year() - moment(unix+fuso).year() - 1);
+  } else{
+    return (moment(Date.now()+fuso).year() - moment(unix+fuso).year());
+  }
 }
 
 function sinceDays(unix,  fuso){

@@ -65,7 +65,7 @@ function searchMember(user){
                         "<table class=\"table-statistic\">" + "<tr>" +
                         "<th>Membro desde:</th>" + "<td>" + member.joinDate + " as " + member.joinTime + "</td>" +
                         "</tr>" + "<tr>" + "<th>Autorizado por:</th>" + "<td>" + member.authorizedByName + "</td>" +
-                        "</tr>" + "<tr>" + "<th>GDVERSÁRIO em:</th>" + "<td>" + member.daysToBday + " dia(s)" + "</td>" +
+                        "</tr>" + "<tr>" + "<th>" + (member.age+1) + "º GDVERSÁRIO em:</th>" + "<td>" + member.daysToBday + " dia(s)" + "</td>" +
                         "</tr>" + "</table>" + "</div>" + "</div>";
             conteudo += "</div>";
         }
