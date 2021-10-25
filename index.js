@@ -1,7 +1,6 @@
 const keepAlive = require("./keepalive");
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
-const {loadData, saveData, updateMemberData} = require("./functions/data");
 const {callName} = require("./functions/features");
 const Discord = require("discord.js");
 const veterantime = 2592000;

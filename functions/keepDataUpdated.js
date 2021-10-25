@@ -16,7 +16,7 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
       guild.members.cache.each(member => {
         memberCounterNumber++
         console.log(memberCounterNumber,"Members");
-        updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client);
+        updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client, memberCounterNumber);
       });
 
       data = loadData(datafile);

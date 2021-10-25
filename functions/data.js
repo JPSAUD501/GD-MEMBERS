@@ -94,7 +94,7 @@ function memberLevel(member){
   }
 }
 
-function updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client){
+function updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client, memberCounterNumber){
 
       function restoreMemberData(name){
         dataf = loadData(datafile)
@@ -229,7 +229,9 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
       if(restoreMemberData("pointsLastDayUpdate") !== moment(Date.now()+fusotime).format('DD/MM/YYYY')){
         data.memberList[member.user.id].pointsLastDayUpdate = moment(Date.now()+fusotime).format('DD/MM/YYYY');
         if(restoreMemberData("points") !==  null){
-          data.memberList[member.user.id].points = restoreMemberData("points") + 1;
+          if(restoreMemberData("points") < restoreMemberData("pointsMax")){
+            data.memberList[member.user.id].points = restoreMemberData("points") + 1;
+          }
         } else{
           data.memberList[member.user.id].points = restoreMemberData("pointsMax");
         }
@@ -240,6 +242,12 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
       if(restoreMemberData("points") == null){
         data.memberList[member.user.id].points = restoreMemberData("pointsMax");
         console.log("Updating null points (data)")
+        saveData(datafile, data);
+      }
+
+      if(restoreMemberData("points") > restoreMemberData("pointsMax")){
+        data.memberList[member.user.id].points = restoreMemberData("pointsMax");
+        console.log("Points > PointsMax - Updating to max (data)")
         saveData(datafile, data);
       }
 
@@ -268,6 +276,7 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
          "legacyMember": restoreMemberData("legacyMember"),
          "avatarUrl": member.displayAvatarURL(),
          "msgId": restoreMemberData("msgId"),
+         "gdmId": memberCounterNumber
       } 
 
     if (JSON.stringify(memberdata) !== JSON.stringify(data.memberList[member.user.id])) {

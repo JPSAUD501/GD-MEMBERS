@@ -10,7 +10,9 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
     console.log("Member alrady in the data, deleting! (newMember)");
     saveData(datafile, data);
   }
-  updateMemberData(member, data, datafile, botrelease, fusotime);
+  updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client, 0);
+  console.log("Saving new member data! (newMember)")
+  saveData(datafile, data);
 
   if(member.user.bot) return;
 
@@ -98,7 +100,7 @@ function buttonClicked(client, interaction, datafile, guildid){
     data.memberList[interaction.customId].authorizedTimeUnix = Date.now();
     data.memberList[interaction.customId].authorizedById = interaction.user.id;
     data.memberList[interaction.customId].authorizedByName = interaction.user.username;
-    console.log("Authorizing member and who clicked button (newMember)")
+    console.log("Authorizing member and update data of who clicked the button (newMember)")
     saveData(datafile, data);
 
     var embed = new MessageEmbed()
@@ -119,11 +121,12 @@ function buttonClicked(client, interaction, datafile, guildid){
     interaction.message.edit({ content: `<@${interaction.customId}>`, embeds: [embed], components: [row] });
     interaction.reply({content:`O membro <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
     setTimeout(function(){ interaction.message.delete() }, 60000);
+    client.channels.cache.get(process.env['logchannel']).send({content:`AUTORIZAÇÃO - O membro "${user.user.username}" foi autorizado a ser membro do servidor por "${interaction.user.username}" usando 1 ponto dos seus ${data.memberList[interaction.user.id].points + 1}.`});
   }).catch(function(error){
       console.log(error);
-      interaction.reply({content:`<@${interaction.user.id}> Esse membro não está mais presente no seridor! Convide ele novamente!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      interaction.reply({content:`<@${interaction.user.id}> Parece que membro não está mais presente no seridor! Convide ele novamente! / Caso seja um erro por favor contate um moderador no canal #🦸┆ajuda-chat`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
       interaction.message.delete();
-      return console.log("(newMember) Error: Member exit the server");
+      return console.log("(newMember) Error: Member probaly exit the server");
     }
   );
 }

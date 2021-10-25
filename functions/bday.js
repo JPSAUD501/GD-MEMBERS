@@ -27,6 +27,7 @@ function bday(client, guildid, fusotime, datafile, member){
 
       var data = loadData(datafile)
       data.memberList[member.id].lastBdayMsg = todayyear;
+      data.memberList[member.id].lastBdayMsg = todayyear;
       console.log("Adding message id to data (newMember)")
       saveData(datafile, data);
     }).catch(console.error);
