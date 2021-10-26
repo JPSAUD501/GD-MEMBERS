@@ -39,7 +39,7 @@ const client = new Discord.Client({
 
 
 client.on("ready", () => {
-
+  
   keepDataUpdated(client, fusotime, botrelease, guildid, datafile);
   callName(client, guildid, datafile, fusotime);
 

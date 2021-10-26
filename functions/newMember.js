@@ -122,7 +122,7 @@ function buttonClicked(client, interaction, datafile, guildid){
     interaction.reply({content:`O membro <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
     setTimeout(function(){ interaction.message.delete().catch() }, 60000);
     user.send(`Bem vindo ao GRUPO DISPARATE! Você foi autorizado pelo ${interaction.user.username}!\n\nVou pular o bla bla bla depois de "Bem Vindo" pois estou enviando essa mensagem para avisar que você pode escolher uma cor para o seu nome no canal "#📝┆seu-registro" ou pelo link: https://discord.com/channels/720275637415182416/729662955053907980/729671862220619807\n\nFlw!`);
-    client.channels.cache.get(process.env['logchannel']).send({content:`AUTORIZAÇÃO - O membro "${user.user.username}" foi autorizado a ser membro do servidor por "${interaction.user.username}" usando 1 ponto dos seus ${data.memberList[interaction.user.id].points + 1}.`});
+    client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO** - O membro **"${user.user.username}"** foi autorizado a ser membro do servidor por **"${interaction.user.username}"** usando **1** ponto dos seus **${data.memberList[interaction.user.id].points + 1}**.`});
   }).catch(function(error){
       console.log(error);
       interaction.reply({content:`<@${interaction.user.id}> Parece que membro não está mais presente no seridor! Convide ele novamente! / Caso seja um erro por favor contate um moderador no canal #🦸┆ajuda-chat`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
