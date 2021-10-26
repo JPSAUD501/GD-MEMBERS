@@ -33,7 +33,6 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
 
   var membersInVoiceTxt = "**Membros ativos agora:** ";
   membersInVoice.forEach(id => {
-    console.log(id);
     membersInVoiceTxt += `<@${id}>`;
   });
 
@@ -52,7 +51,7 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
       );
 
     if(membersInVoice.length > 0){
-      client.channels.cache.get(process.env['mainchannel']).send({ content: membersInVoiceTxt }).then(msg => { setTimeout(() => msg.delete(), 120000) }).catch();
+      client.channels.cache.get(process.env['mainchannel']).send({ content: membersInVoiceTxt }).then(msg => { setTimeout(() => msg.delete(), 60000) }).catch();
     } else {
       console.log("0 active members in the guild (newMember)");
     }
@@ -66,6 +65,7 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
 }
 
 function buttonClicked(client, interaction, datafile, guildid){
+  try{
   if (!interaction.isButton()) return;
   var data = loadData(datafile);
   const guild = client.guilds.cache.get(guildid);
@@ -76,7 +76,7 @@ function buttonClicked(client, interaction, datafile, guildid){
     if(user.user.id !== interaction.customId) return console.log("(newMember) (2) Error wrong id:", user.user.id, interaction.customId);
     if(user._roles.includes("721660842176806965")){
       interaction.reply({content:`<@${interaction.user.id}> O membro que você tentou autorizar já foi aprovado!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
-      interaction.message.delete();
+      interaction.message.delete().catch();
       return console.log("(newMember) Error: Alredy MEMBER");
     } 
 
@@ -120,16 +120,17 @@ function buttonClicked(client, interaction, datafile, guildid){
 
     interaction.message.edit({ content: `<@${interaction.customId}>`, embeds: [embed], components: [row] });
     interaction.reply({content:`O membro <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
-    setTimeout(function(){ interaction.message.delete() }, 60000);
+    setTimeout(function(){ interaction.message.delete().catch() }, 60000);
     user.send(`Bem vindo ao GRUPO DISPARATE! Você foi autorizado pelo ${interaction.user.username}!\n\nVou pular o bla bla bla depois de "Bem Vindo" pois estou enviando essa mensagem para avisar que você pode escolher uma cor para o seu nome no canal "#📝┆seu-registro" ou pelo link: https://discord.com/channels/720275637415182416/729662955053907980/729671862220619807\n\nFlw!`);
     client.channels.cache.get(process.env['logchannel']).send({content:`AUTORIZAÇÃO - O membro "${user.user.username}" foi autorizado a ser membro do servidor por "${interaction.user.username}" usando 1 ponto dos seus ${data.memberList[interaction.user.id].points + 1}.`});
   }).catch(function(error){
       console.log(error);
       interaction.reply({content:`<@${interaction.user.id}> Parece que membro não está mais presente no seridor! Convide ele novamente! / Caso seja um erro por favor contate um moderador no canal #🦸┆ajuda-chat`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
-      interaction.message.delete();
+      interaction.message.delete().catch();
       return console.log("(newMember) Error: Member probaly exit the server");
     }
   );
+}catch(e){console.log(e)}
 }
 
 module.exports = {

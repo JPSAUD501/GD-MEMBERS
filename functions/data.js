@@ -41,7 +41,10 @@ function loadData(datafile){
 
 function saveData(datafile, data){
   fs.writeFileSync("./"+(datafile), JSON.stringify(data, null, 2));
-  console.log("Saved!")
+  console.log("Saved s1!")
+  var dataverify = loadData(datafile);
+  fs.writeFileSync("./"+(datafile), JSON.stringify(dataverify, null, 2));
+  console.log("Saved s2!")
 }
 
 function memberLevel(member){
