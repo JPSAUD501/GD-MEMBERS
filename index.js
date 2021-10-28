@@ -2,12 +2,14 @@ const keepAlive = require("./keepalive");
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
 const {callName} = require("./functions/features");
+const {commands} = require("./functions/features");
 const Discord = require("discord.js");
 const veterantime = 2592000;
 const fusotime = -10800000;
 const botrelease = 1634452922000;
 const guildid = "720275637415182416";
 const datafile = "./site/data.json";
+const prefix = "/";
 
 keepAlive(datafile);
 
@@ -58,6 +60,12 @@ client.on('guildMemberAdd', member => {
 client.on('interactionCreate', interaction => {
 
   buttonClicked(client, interaction, datafile, guildid);
+
+});
+
+client.on('messageCreate', message => {
+
+  commands(client, message, prefix, guildid);
 
 });
 

@@ -14,7 +14,7 @@ function md(unix, fuso){
 }
 
 function age(unix,  fuso){
-  if(parseInt(md(unix, fuso).replace(/\//gi, "")) >= parseInt(md(Date.now(), fuso).replace(/\//gi, ""))){
+  if(parseInt(md(unix, fuso).replace(/\//gi, "")) > parseInt(md(Date.now(), fuso).replace(/\//gi, ""))){
     return (moment(Date.now()+fuso).year() - moment(unix+fuso).year() - 1);
   } else{
     return (moment(Date.now()+fuso).year() - moment(unix+fuso).year());
