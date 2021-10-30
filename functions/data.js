@@ -35,8 +35,14 @@ function loadData(datafile){
   if (!fs.existsSync("./"+(datafile))){
     console.log("Criando arquivo!");
     createFile(datafile)
+    let datajson = JSON.parse(fs.readFileSync("./"+(datafile), 'utf8'));
+    saveData(datafile, datajson);
+    let datajson2 = JSON.parse(fs.readFileSync("./"+(datafile), 'utf8'));
+    return datajson2;
+  } else{
+    let datajson = JSON.parse(fs.readFileSync("./"+(datafile), 'utf8'));
+    return datajson;
   }
-  return JSON.parse(fs.readFileSync("./"+(datafile), 'utf8'));
 }
 
 function saveData(datafile, data){
@@ -257,7 +263,7 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
       var memberdata = {
          "id": member.user.id,
          "user": member.user.username,
-         "noob": (!member._roles.includes("721660842176806965") || member._roles.includes("896257202426376192")) ,
+         "noob": (!member._roles.includes("721660842176806965")) ,
          "bot": member.user.bot,
          "birthday": birthday(member.joinedTimestamp, fusotime),
          "lastBdayMsg": restoreMemberData("lastBdayMsg"),
