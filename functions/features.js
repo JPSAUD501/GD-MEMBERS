@@ -4,6 +4,8 @@ const {birthday} = require("./moment");
 const emojiRegex = require('emoji-regex');
 const regex = emojiRegex();
 var timer = [];
+var timerRole = [];
+var roleDelay = 0.5;
 
 function get_random (list) {
   return list[Math.floor((Math.random()*list.length))];
@@ -45,15 +47,15 @@ function callName(client, guildid, datafile, fusotime){
 
           if(activity.applicationId == "700136079562375258"){
             //VALORANT
-            console.log(m.user.username, "---", activity);
+            //console.log(m.user.username, "---", activity);
           }
           if(activity.applicationId == "401518684763586560"){
             //LoL
-            console.log(m.user.username, "---", activity);
+            //console.log(m.user.username, "---", activity);
           }
           if(activity.applicationId == "821361671729709086"){
             //BlueStacks 5
-            console.log(m.user.username, "---", activity);
+            //console.log(m.user.username, "---", activity);
           }
 
         });
@@ -84,12 +86,135 @@ function callName(client, guildid, datafile, fusotime){
   }catch(e){console.log(e)}
   }
 
+  function divRoles(){
+  try{
+    console.log("Updating divsRoles (features)");
+    var roleLvl = "909711622640115742";
+    var roleDivMain = "909710113907023893";
+    var roleStaff = "909713172653543454";
+    var roleInsignia = "909711093537079346";
+    var guild = client.guilds.cache.get(guildid);
+    guild.members.fetch().then(members => { members.forEach(member => {
+      try{
+        let m = member
+        
+        m._roles.forEach(roleId => {
+          const role = guild.roles.cache.get(roleId);
+          if(role.name.includes("✮")){
+            if(!m._roles.includes(roleLvl)){
+              if(timerRole["role"] && (((Date.now()-timerRole["role"]) / 1000) < roleDelay )){
+                return
+                } else{
+                  console.log(m.user.username, "Giving role Lvl (features)");
+                  m.roles.add(guild.roles.cache.get(roleLvl));
+                  timerRole["role"] = Date.now();
+              }              
+            }
+          }
+          if(role.name.includes("『")){
+            if(!m._roles.includes(roleDivMain)){
+              if(timerRole["role"] && (((Date.now()-timerRole["role"]) / 1000) < roleDelay )){
+                return
+                } else{
+                  console.log(m.user.username, "Giving role DivMain (features)");
+                  m.roles.add(guild.roles.cache.get(roleDivMain));
+                  timerRole["role"] = Date.now();
+              }
+            }
+          }
+          if(role.name.includes("🏳")){
+            if(!m._roles.includes(roleStaff)){
+              if(timerRole["role"] && (((Date.now()-timerRole["role"]) / 1000) < roleDelay )){
+                return
+                } else{
+                  console.log(m.user.username, "Giving role Staff (features)");
+                  m.roles.add(guild.roles.cache.get(roleStaff));
+                  timerRole["role"] = Date.now();
+              }
+            }
+          }
+          if(role.name.includes("🎖")){
+            if(!m._roles.includes(roleInsignia)){
+              if(timerRole["role"] && (((Date.now()-timerRole["role"]) / 1000) < roleDelay )){
+                return
+                } else{
+                  console.log(m.user.username, "Giving role Insignia (features)");
+                  m.roles.add(guild.roles.cache.get(roleInsignia));
+                  timerRole["role"] = Date.now();
+              }
+            }
+          }
+        })
+
+        m._roles.forEach(roleId => {
+          var includesRole = 0;
+          if(roleId == roleLvl){
+            includesRole = 0;
+            m._roles.forEach(roleId => {
+              const role = guild.roles.cache.get(roleId);
+              if(role.name.includes("✮")){
+                includesRole += 1;
+              }
+            })
+            if(includesRole == 0){
+              console.log(m.user.username, "Removing role Lvl (features)");
+              m.roles.remove(guild.roles.cache.get(roleLvl));
+            }
+          }
+          if(roleId == roleDivMain){
+            includesRole = 0;
+            m._roles.forEach(roleId => {
+              const role = guild.roles.cache.get(roleId);
+              if(role.name.includes("『")){
+                includesRole += 1;
+              }
+            })
+            if(includesRole == 0){
+              console.log(m.user.username, "Removing role DivMain (features)");
+              m.roles.remove(guild.roles.cache.get(roleDivMain));
+            }
+          }
+          if(roleId == roleStaff){
+            includesRole = 0;
+            m._roles.forEach(roleId => {
+              const role = guild.roles.cache.get(roleId);
+              if(role.name.includes("🏳")){
+                includesRole += 1;
+              }
+            })
+            if(includesRole == 0){
+              console.log(m.user.username, "Removing role Staff (features)");
+              m.roles.remove(guild.roles.cache.get(roleStaff));
+            }
+          }
+          if(roleId == roleInsignia){
+            includesRole = 0;
+            m._roles.forEach(roleId => {
+              const role = guild.roles.cache.get(roleId);
+              if(role.name.includes("🎖")){
+                includesRole += 1;
+              }
+            })
+            if(includesRole == 0){
+              console.log(m.user.username, "Removing role Insignia (features)");
+              m.roles.remove(guild.roles.cache.get(roleInsignia));
+            }
+          }
+        })
+
+      }catch(e){console.e}      
+    })}).catch(console.error);
+  }catch(e){console.log(e)}
+  }
+
   everyMinute();
   every15Minutes();
   memberCounter();
-  var loop1 = setInterval(function(){ everyMinute(); }, 30000);
+  divRoles();
+  var loop1 = setInterval(function(){ everyMinute(); }, 60000*1);
   var loop2 = setInterval(function(){ every15Minutes(); }, 60000*15);
   var loop3 = setInterval(function(){ memberCounter(); }, 60000*10);
+  var loop3 = setInterval(function(){ divRoles(); }, 60000*0.5);
 }
 
 function commands(client, message, prefix, guildid){
@@ -130,10 +255,8 @@ function commands(client, message, prefix, guildid){
       
 
       //Text
-      text = text.join(" ");
-      const match2 = text.match(regex)
-      if(match2) return message.reply({content: "Não utilize emojis no campo de nome do comando. Para usar esse comando mande **/callname (emoji) (nome)**."}).catch();
-      text = cFL(text);
+
+
       if(text.lenth > 10) return message.reply({content: "O campo de nome não pode ter mais de 15 caracteres. Para usar esse comando mande **/callname (emoji) (nome)**."}).catch();
 
       //Name
