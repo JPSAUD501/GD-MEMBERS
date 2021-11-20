@@ -30,17 +30,14 @@ function keepAlive(datafile) {
     return txt;
   }
   
-  /*server.all('/', (req, res) => {
-    let titulo = "<h1>LISTA GDVERSARIO</h1>"
-    res.send(titulo + html("daysToBday", false));
-  })
-  server.all('/sincedays', (req, res) => {
-    let titulo = "<h1>LISTA GDVERSARIO</h1>"
-    res.send(titulo + html("memberSincePlusTime", true));
-  }) */
   server.all('/', (req, res) => {
     server.use(express.static(__dirname + '/site'));
     res.sendFile(path.join(__dirname,'','site/index.html'));
+  })
+
+  server.all('/poi', (req, res) => {
+    server.use(express.static(__dirname + '/poi'));
+    res.sendFile(path.join(__dirname,'','poi/index-poi.html'));
   })
 }
 

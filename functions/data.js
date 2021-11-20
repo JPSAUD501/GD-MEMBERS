@@ -33,7 +33,7 @@ function createFile(datafile){
 
 function loadData(datafile){
   if (!fs.existsSync("./"+(datafile))){
-    console.log("Criando arquivo!");
+    console.log("Criando arquivo!", datafile);
     createFile(datafile)
     let datajson = JSON.parse(fs.readFileSync("./"+(datafile), 'utf8'));
     saveData(datafile, datajson);
@@ -47,10 +47,10 @@ function loadData(datafile){
 
 function saveData(datafile, data){
   fs.writeFileSync("./"+(datafile), JSON.stringify(data, null, 2));
-  console.log("Saved s1!")
+  console.log("Saved s1!", datafile)
   var dataverify = loadData(datafile);
   fs.writeFileSync("./"+(datafile), JSON.stringify(dataverify, null, 2));
-  console.log("Saved s2!")
+  console.log("Saved s2!", datafile)
 }
 
 function memberLevel(member){
