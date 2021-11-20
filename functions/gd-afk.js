@@ -66,8 +66,9 @@ async function afkTyping(typing, client, guildid){
 
 async function afkNewState(oldState, newState, client, guildid){
   try{
-  if(oldState.channel.parentId == "771255883543216171") return;
-  if(newState.channel.parentId == "771255883543216171") return;
+
+  if(!oldState.channel){}else if(oldState.channel.parentId == "771255883543216171") return;
+  if(!newState.channel){}else if(newState.channel.parentId == "771255883543216171") return;
 
   for(var i in timer){
     if(!i) return;
@@ -95,10 +96,12 @@ async function afk(oldState, newState, client, guildid){
 
     var guild = client.guilds.cache.get(guildid);
     
-    if (oldState.channel.name.startsWith("🚯┆") && oldState.channel.parent.id == "771255883543216171"){
-      if(Object.keys(oldState.channel.members).length <= 0){
-        console.log("Deleting old private afk channel (gd-afk)");
-        oldState.channel.delete();
+    if(oldState.channel){
+      if (oldState.channel.name.startsWith("🚯┆") && oldState.channel.parent.id == "771255883543216171"){
+        if(Object.keys(oldState.channel.members).length <= 0){
+          console.log("Deleting old private afk channel (gd-afk)");
+          oldState.channel.delete();
+        }
       }
     }
     
@@ -124,7 +127,7 @@ async function afk(oldState, newState, client, guildid){
           timer[afkMember.user.id] = Date.now();
           await afkMember.voice.setChannel(oldChannel);
         }else{
-          console.log("Deleted channel (gd-afk)");
+          console.log("Deleted channel or null oldChannel (gd-afk)");
           privateAfk();
         }
       }else{
