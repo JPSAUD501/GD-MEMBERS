@@ -254,11 +254,9 @@ function commands(client, message, prefix, guildid){
       }
       const emojiarray = match[0];
       const emoji = [...emojiarray][0];
-      
 
       //Text
-
-
+      text = text.join(" ");
       if(text.lenth > 10) return message.reply({content: "O campo de nome não pode ter mais de 15 caracteres. Para usar esse comando mande **/callname (emoji) (nome)**."}).catch();
 
       //Name

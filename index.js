@@ -1,8 +1,8 @@
 const keepAlive = require("./keepalive");
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
-const {callName} = require("./functions/features");
-const {commands} = require("./functions/features");
+const {callName, commands} = require("./functions/features");
+const {afk} = require("./functions/gd-afk");
 const Discord = require("discord.js");
 const veterantime = 2592000;
 const fusotime = -10800000;
@@ -66,6 +66,12 @@ client.on('interactionCreate', interaction => {
 client.on('messageCreate', message => {
 
   commands(client, message, prefix, guildid);
+
+});
+
+client.on("voiceStateUpdate", (oldState, newState) => {
+
+  afk(oldState, newState, client, guildid);
 
 });
 
