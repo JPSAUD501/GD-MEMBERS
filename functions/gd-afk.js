@@ -6,6 +6,8 @@ var firstCheck = true;
 
 async function afkCheckProcess(client, guildid){
   try{
+  console.log("Afks: (gd-afk)");
+  console.log(timer);
   if((Object.keys(timer).length <= 0) && firstCheck == true){
     console.log("First afkCheck (gd-afk)");
     firstCheck = false;
@@ -24,7 +26,7 @@ async function afkCheckProcess(client, guildid){
       if(!i) return;
       if((timer[i] + (guild.afkTimeout*1000) + (60000*0.5)) > Date.now()){
         console.log("No longer afk (gd-afk)");
-        timer.splice(i, 1);
+        delete timer[i];
         guild.members.fetch(i).then(member => { 
           if(!member.nickname) return;
           if(member.nickname.endsWith(afkTag)){
@@ -47,9 +49,10 @@ async function afkCheck(client, guildid){
 async function afkTyping(typing, client, guildid){
   try{
   for(var i in timer){
+    if(!i) return;
     if(i == typing.member.user.id){
       console.log("No longer afk (gd-afk)");
-      timer.splice(i, 1);
+      delete timer[i];
       if(!typing.member.nickname) return;
       if(typing.member.nickname.endsWith(afkTag)){
         var nick = typing.member.nickname.replace(afkTag, "");
@@ -67,7 +70,10 @@ async function afkNewState(oldState, newState, client, guildid){
   if(newState.channel.parentId == "771255883543216171") return;
 
   for(var i in timer){
+    if(!i) return;
     if(i == newState.id){
+      console.log("No longer afk (gd-afk)");
+      delete timer[i];
       var guild = client.guilds.cache.get(guildid);
       var member = await guild.members.fetch(newState.id);
       if(!member.nickname) return;
