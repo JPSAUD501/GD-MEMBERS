@@ -2,7 +2,7 @@ const keepAlive = require("./keepalive");
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
 const {callName, commands} = require("./functions/features");
-const {afk} = require("./functions/gd-afk");
+const {afkCheck, afk, afkTyping, afkNewState} = require("./functions/gd-afk");
 const Discord = require("discord.js");
 const veterantime = 2592000;
 const fusotime = -10800000;
@@ -44,18 +44,21 @@ client.on("ready", () => {
   
   keepDataUpdated(client, fusotime, botrelease, guildid, datafile);
   callName(client, guildid, datafile, fusotime);
+  afkCheck(client, guildid);
 
 });
 
+client.on("typingStart", typing => {
 
+  afkTyping(typing, client, guildid);
+  
+});
 
 client.on('guildMemberAdd', member => {
 
   newMember(client, guildid, member, datafile, fusotime, botrelease);
 
 });
-
-
 
 client.on('interactionCreate', interaction => {
 
@@ -72,6 +75,7 @@ client.on('messageCreate', message => {
 client.on("voiceStateUpdate", (oldState, newState) => {
 
   afk(oldState, newState, client, guildid);
+  afkNewState(oldState, newState, client, guildid);
 
 });
 
