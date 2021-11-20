@@ -346,8 +346,8 @@ async function commands(client, message, prefix, guildid){
 
       await delay(5000);
       timerPoi["newRoundStart"] = Date.now();
-      player1.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 1 ou seja, PAR, dessa rodade de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
-      player2.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 1 ou seja, ÍMPAR, dessa rodade de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos para participar! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
+      player1.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 1 ou seja, PAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
+      player2.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 2 ou seja, ÍMPAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos para participar! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
       
       datapoi.text = `Aguardando resposta dos jogadores!<br>30`
       saveData("./poi/poi.json", datapoi);

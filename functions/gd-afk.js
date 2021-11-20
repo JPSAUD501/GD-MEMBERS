@@ -100,7 +100,7 @@ async function afk(oldState, newState, client, guildid){
       if (oldState.channel.name.startsWith("🚯┆") && oldState.channel.parent.id == "771255883543216171"){
         if(Object.keys(oldState.channel.members).length <= 0){
           console.log("Deleting old private afk channel (gd-afk)");
-          oldState.channel.delete();
+          oldState.channel.delete().catch(console.error);
         }
       }
     }
