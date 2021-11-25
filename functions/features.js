@@ -344,10 +344,10 @@ async function commands(client, message, prefix, guildid){
       datapoi.text = `Nova rodada!<br>${player1.user.username.toUpperCase()} vs ${player2.user.username.toUpperCase()}`
       saveData("./poi/poi.json", datapoi);
 
-      await delay(5000);
       timerPoi["newRoundStart"] = Date.now();
       player1.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 1 ou seja, PAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
       player2.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 2 ou seja, ÍMPAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos para participar! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
+      await delay(5000);
       
       datapoi.text = `Aguardando resposta dos jogadores!<br>30`
       saveData("./poi/poi.json", datapoi);
@@ -497,14 +497,16 @@ async function commands(client, message, prefix, guildid){
         //Par
         datapoi.text = `${player1.user.username} ganhou!<br>${player1.user.username}: ${player1Value} + ${player2Value} :${player2.user.username}<br>${player1Value+player2Value} é par!`
         saveData("./poi/poi.json", datapoi);
-        message.reply({content: `Fim da rodada!`});
+        message.author.send({content: `O jogador <@!${player1.user.id}> ganhou! <@!${player1.user.id}> jogou ${player1Value} e o <@!${player2.user.id}> jogou ${player2Value}.`});
+        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`});
         await delay(10000);
       }
       if(evenOrOdd == 1){
         //Impar
         datapoi.text = `${player2.user.username} ganhou!<br>${player1.user.username}: ${player1Value} + ${player2Value} :${player2.user.username}<br>${player1Value+player2Value} é ímpar!`
         saveData("./poi/poi.json", datapoi);
-        message.reply({content: `Fim da rodada!`});
+        message.author.send({content: `O jogador <@!${player2.user.id}> ganhou! <@!${player2.user.id}> jogou ${player2Value} e o <@!${player1.user.id}> jogou ${player1Value}.`});
+        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`});
         await delay(10000);
       }
     }
@@ -516,7 +518,7 @@ async function commands(client, message, prefix, guildid){
       saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
       console.log("End of round error (features)");
       if(e !== "ok") {
-        message.reply({content: `Foi detectado um erro de codigo 0 durante a execução do comando, pedimos desculpas pelo incoveniente! Tente novamente em alguns segundos por favor.`});
+        message.reply({content: `Foi detectado um erro de codigo ALPHA durante a execução do comando, pedimos desculpas pelo incoveniente! Tente novamente em alguns segundos por favor.`});
         console.log(e);
       }
     }
