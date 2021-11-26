@@ -115,7 +115,9 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
       }
 
       function pointsMaxLvl(member){
-                 if(member._roles.includes(lvl01)){
+          if(member._roles.includes("721089379547873340")){
+            return 8;
+          } else if(member._roles.includes(lvl01)){
             return 0;
           } else if(member._roles.includes(lvl10)){
             return 1;

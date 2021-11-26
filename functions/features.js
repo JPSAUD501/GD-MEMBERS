@@ -236,13 +236,13 @@ async function commands(client, message, prefix, guildid){
     console.log(msg);
     const guild = client.guilds.cache.get(guildid)
     guild.members.fetch(message.author.id).then(user => {
-      if(memberLevel(user) < 50) return message.reply({content: "Para usar esse comando você precisa ser LvL 50 aqui no servidor. Para saber como verificar seu nível leia o canal <#768686751291408424>."}).catch();
+      if(memberLevel(user) < 50) return message.reply({content: "Para usar esse comando você precisa ser LvL 50 aqui no servidor. Para saber como verificar seu nível leia o canal <#768686751291408424>."}).catch(console.error);
       const vChannel = message.member.voice.channel;
-      if (!vChannel) return message.reply({content: "Entre em um canal para poder trocar o nome dele!"}).catch();
-      if(vChannel.parentId !== "720275637415182420") return message.reply({content: "Entre em um canal válido para renomea-lo!"}).catch();
-      if(!vChannel.name.includes("┊")) return message.reply({content: "Entre em um canal válido para renomea-lo!"}).catch();
-      if(!msg[1]) return message.reply({content: "Para trocar o nome do canal de voz mande **/callname (emoji) (nome)**. "}).catch();
-      if(timer[vChannel.id] && (((Date.now()-timer[vChannel.id]) / 1000) <= 300 )) return message.reply({content: "O Discord só permite a troca do nome do canal a cada 5 minutos. Tente renomear outro canal de voz ou aguarde e tente novamente em **" + parseInt(300 - ((Date.now()-timer[vChannel.id]) / 1000)) + " segundos** para poder alterar o nome desse!" }).catch();
+      if (!vChannel) return message.reply({content: "Entre em um canal para poder trocar o nome dele!"}).catch(console.error);
+      if(vChannel.parentId !== "720275637415182420") return message.reply({content: "Entre em um canal válido para renomea-lo!"}).catch(console.error);
+      if(!vChannel.name.includes("┊")) return message.reply({content: "Entre em um canal válido para renomea-lo!"}).catch(console.error);
+      if(!msg[1]) return message.reply({content: "Para trocar o nome do canal de voz mande **/callname (emoji) (nome)**. "}).catch(console.error);
+      if(timer[vChannel.id] && (((Date.now()-timer[vChannel.id]) / 1000) <= 300 )) return message.reply({content: "O Discord só permite a troca do nome do canal a cada 5 minutos. Tente renomear outro canal de voz ou aguarde e tente novamente em **" + parseInt(300 - ((Date.now()-timer[vChannel.id]) / 1000)) + " segundos** para poder alterar o nome desse!" }).catch(console.error);
 
       //Emoji and text
       var match = msg[1].match(regex);
@@ -260,12 +260,12 @@ async function commands(client, message, prefix, guildid){
 
       //Text
       text = text.join(" ");
-      if(text.lenth > 10) return message.reply({content: "O campo de nome não pode ter mais de 15 caracteres. Para usar esse comando mande **/callname (emoji) (nome)**."}).catch();
+      if(text.lenth > 10) return message.reply({content: "O campo de nome não pode ter mais de 15 caracteres. Para usar esse comando mande **/callname (emoji) (nome)**."}).catch(console.error);
 
       //Name
       const name = emoji + "┊" + text;
       console.log(name);
-      message.reply({content: `Trocando o nome do canal para: **${name}**\n\nSe em até 10 segundos o nome não mudar tente novamente daqui 5 minutos devido as limitações do Discord.`});
+      message.reply({content: `Trocando o nome do canal para: **${name}**\n\nSe em até 10 segundos o nome não mudar tente novamente daqui 5 minutos devido as limitações do Discord.`}).catch(console.error);
       vChannel.setName(name).then(channel => {
         console.log("New name in voice channel (features)");
         timer[vChannel.id] = Date.now();
@@ -276,7 +276,7 @@ async function commands(client, message, prefix, guildid){
 
   if(msg[0] == "/crole" || msg[0] == "/cr" || msg[0] == "/createrole" || msg[0] == "/creater"){
     if(message.channel.id !== "771257420470157322") return;
-    if(message.author.id !== process.env["ownerid"]) return message.reply({content: "Apenas um administrador do BOT pode usar esse comando."}).catch();
+    if(message.author.id !== process.env["ownerid"]) return message.reply({content: "Apenas um administrador do BOT pode usar esse comando."}).catch(console.error);
 
     const guild = client.guilds.cache.get(guildid);
 
@@ -303,11 +303,11 @@ async function commands(client, message, prefix, guildid){
       position: position,
       reason: 'Create a insignia role!',
     }).then(role => {
-      message.reply({content: `Criado com sucesso o emblema <@&${role.id}>`}).catch();
+      message.reply({content: `Criado com sucesso o emblema <@&${role.id}>`}).catch(console.error);
       if(memberGiftedId !== null){
         guild.members.fetch(memberGiftedId).then(member => {
           member.roles.add(role).then(function(){
-            message.reply({content: `O novo emblema <@&${role.id}> foi fornecido à <@${memberGiftedId}>`}).catch();
+            message.reply({content: `O novo emblema <@&${role.id}> foi fornecido à <@${memberGiftedId}>`}).catch(console.error);
           }).catch(console.error);
         }).catch(console.error);
       }
@@ -318,17 +318,17 @@ async function commands(client, message, prefix, guildid){
     try{
     async function round(){
       if(message.channel.id !== "771257420470157322") return;
-      if(!message.member._roles.includes("911416704935022592")) return message.reply({content: `Você precisa ser um <@&911416704935022592> para poder iniciar uma nova rodada de Par Ou Ímpar.`});
-      if(timerPoi["newRound"] && (((Date.now()-timerPoi["newRound"]) / 1000) < 50 )) return message.reply({content: `Aguarde mais ${parseInt(50 - ((Date.now()-timerPoi["newRound"]) / 1000))} segundos para iniciar uma nova rodada de Par Ou Ímpar.`});
+      if(!message.member._roles.includes("911416704935022592")) return message.reply({content: `Você precisa ser um <@&911416704935022592> para poder iniciar uma nova rodada de Par Ou Ímpar.`}).catch(console.error);
+      if(timerPoi["newRound"] && (((Date.now()-timerPoi["newRound"]) / 1000) < 50 )) return message.reply({content: `Aguarde mais ${parseInt(50 - ((Date.now()-timerPoi["newRound"]) / 1000))} segundos para iniciar uma nova rodada de Par Ou Ímpar.`}).catch(console.error);
 
       var args = msg;
       args.shift();
 
-      if(!args[0])  return message.reply({content: `Por favor mencione o jogador numero 1 (PAR) e em seguida o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`});
+      if(!args[0])  return message.reply({content: `Por favor mencione o jogador numero 1 (PAR) e em seguida o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`}).catch(console.error);
       if(!args[0].startsWith("<@!")) return message.reply({content: `Por favor mencione o jogador numero 1 (PAR) e em seguida o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`});
       var player1id = msg[0].replace("<@!", "").replace(">", "");
-      if(!args[1]) return message.reply({content: `Por favor mencione o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`});
-      if(!args[1].startsWith("<@!")) return message.reply({content: `Por favor mencione o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`});
+      if(!args[1]) return message.reply({content: `Por favor mencione o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`}).catch(console.error);
+      if(!args[1].startsWith("<@!")) return message.reply({content: `Por favor mencione o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`}).catch(console.error);
       var player2id = msg[1].replace("<@!", "").replace(">", "");
 
       const guild = client.guilds.cache.get(guildid);
@@ -338,15 +338,15 @@ async function commands(client, message, prefix, guildid){
       player1 = await guild.members.fetch(player1id).catch(console.error);
       player2 = await guild.members.fetch(player2id).catch(console.error);
 
-      message.reply({content: `Nova rodada iniciada! ${player1.user.username} como PAR e ${player2.user.username} como ÍMPAR.`});
+      message.reply({content: `Nova rodada iniciada! ${player1.user.username} como PAR e ${player2.user.username} como ÍMPAR.`}).catch(console.error);
       var datapoi = {};
       datapoi["text"] = "";
       datapoi.text = `Nova rodada!<br>${player1.user.username.toUpperCase()} vs ${player2.user.username.toUpperCase()}`
       saveData("./poi/poi.json", datapoi);
 
       timerPoi["newRoundStart"] = Date.now();
-      player1.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 1 ou seja, PAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
-      player2.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 2 ou seja, ÍMPAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos para participar! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`});
+      player1.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 1 ou seja, PAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`}).catch(console.error);
+      player2.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 2 ou seja, ÍMPAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos para participar! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`}).catch(console.error);
       await delay(5000);
       
       datapoi.text = `Aguardando resposta dos jogadores!<br>30`
@@ -450,18 +450,18 @@ async function commands(client, message, prefix, guildid){
       var player1LM = player1.user.dmChannel.lastMessage;
       var player2LM = player2.user.dmChannel.lastMessage;
 
-      if((player1LM.createdTimestamp < timerPoi["newRoundStart"]) || (player1LM.createdTimestamp > timerPoi["newRoundEnd"])) return message.reply({content: `O jogador ${player1.user.username} enviou um numero fora do prazo de 10 segundos.`});
-      if((player2LM.createdTimestamp < timerPoi["newRoundStart"]) || (player2LM.createdTimestamp > timerPoi["newRoundEnd"])) return message.reply({content: `O jogador ${player2.user.username} enviou um numero fora do prazo de 10 segundos.`});
+      if((player1LM.createdTimestamp < timerPoi["newRoundStart"]) || (player1LM.createdTimestamp > timerPoi["newRoundEnd"])) return message.reply({content: `O jogador ${player1.user.username} enviou um numero fora do prazo de 10 segundos.`}).catch(console.error);
+      if((player2LM.createdTimestamp < timerPoi["newRoundStart"]) || (player2LM.createdTimestamp > timerPoi["newRoundEnd"])) return message.reply({content: `O jogador ${player2.user.username} enviou um numero fora do prazo de 10 segundos.`}).catch(console.error);
 
       if(player1LM.author.bot){
-        message.reply({content: `O jogador ${player1.user.username} não enviou um numero.`});
+        message.reply({content: `O jogador ${player1.user.username} não enviou um numero.`}).catch(console.error);
         datapoi.text = `Jogador ${player1.user.username} não fez uma jogada<br>Fim da rodada!`
         saveData("./poi/poi.json", datapoi);
         await delay(2000);
         throw "ok";
       }
       if(player2LM.author.bot){
-        message.reply({content: `O jogador ${player2.user.username} não enviou um numero.`});
+        message.reply({content: `O jogador ${player2.user.username} não enviou um numero.`}).catch(console.error);
         datapoi.text = `Jogador ${player2.user.username} não fez uma jogada<br>Fim da rodada!`
         saveData("./poi/poi.json", datapoi);
         await delay(2000);
@@ -476,7 +476,7 @@ async function commands(client, message, prefix, guildid){
       if((parseInt(player1Msg) <= 10) && (parseInt(player1Msg) >= 1)){
         player1Value = parseInt(player1Msg);
       }else{
-        message.reply({content: `O jogador ${player1.user.username} enviou um numero invalido: "${player1Msg}"`});
+        message.reply({content: `O jogador ${player1.user.username} enviou um numero invalido: "${player1Msg}"`}).catch(console.error);
         datapoi.text = `Numero invalido de ${player1.user.username}<br>Fim da rodada!`
         saveData("./poi/poi.json", datapoi);
         await delay(2000);
@@ -485,7 +485,7 @@ async function commands(client, message, prefix, guildid){
       if((parseInt(player2Msg) <= 10) && (parseInt(player2Msg) >= 1)){
         player2Value = parseInt(player2Msg);
       }else{
-        message.reply({content: `O jogador ${player2.user.username} enviou um numero invalido: "${player1Msg}"`});
+        message.reply({content: `O jogador ${player2.user.username} enviou um numero invalido: "${player1Msg}"`}).catch(console.error);
         datapoi.text = `Numero invalido de ${player2.user.username}<br>Fim da rodada!`
         saveData("./poi/poi.json", datapoi);
         await delay(2000);
@@ -497,16 +497,16 @@ async function commands(client, message, prefix, guildid){
         //Par
         datapoi.text = `${player1.user.username} ganhou!<br>${player1.user.username}: ${player1Value} + ${player2Value} :${player2.user.username}<br>${player1Value+player2Value} é par!`
         saveData("./poi/poi.json", datapoi);
-        message.author.send({content: `O jogador <@!${player1.user.id}> ganhou! <@!${player1.user.id}> jogou ${player1Value} e o <@!${player2.user.id}> jogou ${player2Value}.`});
-        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`});
+        message.author.send({content: `O jogador <@!${player1.user.id}> ganhou! <@!${player1.user.id}> jogou ${player1Value} e o <@!${player2.user.id}> jogou ${player2Value}.`}).catch(console.error);
+        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`}).catch(console.error);
         await delay(10000);
       }
       if(evenOrOdd == 1){
         //Impar
         datapoi.text = `${player2.user.username} ganhou!<br>${player1.user.username}: ${player1Value} + ${player2Value} :${player2.user.username}<br>${player1Value+player2Value} é ímpar!`
         saveData("./poi/poi.json", datapoi);
-        message.author.send({content: `O jogador <@!${player2.user.id}> ganhou! <@!${player2.user.id}> jogou ${player2Value} e o <@!${player1.user.id}> jogou ${player1Value}.`});
-        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`});
+        message.author.send({content: `O jogador <@!${player2.user.id}> ganhou! <@!${player2.user.id}> jogou ${player2Value} e o <@!${player1.user.id}> jogou ${player1Value}.`}).catch(console.error);
+        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`}).catch(console.error);
         await delay(10000);
       }
     }
@@ -518,10 +518,20 @@ async function commands(client, message, prefix, guildid){
       saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
       console.log("End of round error (features)");
       if(e !== "ok") {
-        message.reply({content: `Foi detectado um erro de codigo ALPHA durante a execução do comando, pedimos desculpas pelo incoveniente! Tente novamente em alguns segundos por favor.`});
+        message.reply({content: `Foi detectado um erro de codigo ALPHA durante a execução do comando, pedimos desculpas pelo incoveniente! Tente novamente em alguns segundos por favor.`}).catch(console.error);
         console.log(e);
       }
     }
+  }
+
+  if(msg[0] == "/ci" || msg[0] == "/createinvite" || msg[0] == "/invite"){
+    if(message.channel.id !== "857811346048286720") return;
+    if(message.author.id !== process.env["ownerid"]) return message.reply({content: "Apenas um administrador do BOT pode usar esse comando."}).catch(console.error);
+    try{
+      const guild = await client.guilds.cache.get(guildid);
+      var invites = await guild.invites.fetch();
+      console.log(invites);
+    }catch(e){console.log(e)}
   }
 
   }catch(e){console.log(e)}

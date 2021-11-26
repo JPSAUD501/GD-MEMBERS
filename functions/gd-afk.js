@@ -24,8 +24,8 @@ async function afkCheckProcess(client, guildid){
     var guild = await client.guilds.cache.get(guildid);
     for(var i in timer){
       if(!i) return;
-      if((timer[i] + (guild.afkTimeout*1000) + (60000*0.5)) > Date.now()){
-        console.log("No longer afk (gd-afk)");
+      if((timer[i] + (60000*5) + (60000*0.5)) >= Date.now()){
+        console.log("No longer afk - Time (gd-afk)");
         delete timer[i];
         guild.members.fetch(i).then(member => { 
           if(!member.nickname) return;
@@ -51,7 +51,7 @@ async function afkTyping(typing, client, guildid){
   for(var i in timer){
     if(!i) return;
     if(i == typing.member.user.id){
-      console.log("No longer afk (gd-afk)");
+      console.log("No longer afk - Typing (gd-afk)");
       delete timer[i];
       if(!typing.member.nickname) return;
       if(typing.member.nickname.endsWith(afkTag)){
@@ -73,7 +73,7 @@ async function afkNewState(oldState, newState, client, guildid){
   for(var i in timer){
     if(!i) return;
     if(i == newState.id){
-      console.log("No longer afk (gd-afk)");
+      console.log("No longer afk - New State (gd-afk)");
       delete timer[i];
       var guild = client.guilds.cache.get(guildid);
       var member = await guild.members.fetch(newState.id);
