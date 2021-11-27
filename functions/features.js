@@ -222,9 +222,8 @@ function callName(client, guildid, datafile, fusotime){
   var loop3 = setInterval(function(){ divRoles(); }, 60000*0.5);
 }
 
-async function commands(client, message, prefix, guildid){
+async function commands(client, message, prefix, guildid, datafile){
   try{
-  if(!message.content.startsWith(prefix)) return;
   var msg = message.content.split(" ");
   msg = msg.filter((a) => a);
 
@@ -524,13 +523,14 @@ async function commands(client, message, prefix, guildid){
     }
   }
 
-  if(msg[0] == "/ci" || msg[0] == "/createinvite" || msg[0] == "/invite"){
-    if(message.channel.id !== "857811346048286720") return;
-    if(message.author.id !== process.env["ownerid"]) return message.reply({content: "Apenas um administrador do BOT pode usar esse comando."}).catch(console.error);
+  if(msg[0] == "a/m" && msg[1] == "stats"){
+    if(message.channel.id !== "771257420470157322") return;
     try{
-      const guild = await client.guilds.cache.get(guildid);
-      var invites = await guild.invites.fetch();
-      console.log(invites);
+      var data = loadData(datafile);
+      if(!data.memberList[message.author.id]) return message.reply({content: `Não consegui carregar os seus pontos no servidor, tente novamente mais tarde!.`}).catch(console.error);
+      var points = data.memberList[message.author.id].points;
+      points = points*Math.pow(Math.PI, 2.25);
+      message.reply({content: `O seu score atual no servidor é **${Math.round(points)}**\nLembrando que esse valor é gerado automaticamente com base no seu nivel no servidor principalmente.!\nO seu score é usado para autorizar novos membros ou gerar convites pré-aprovados, dessa forma se você realizou alguma dessas ações recentemente seu score provavelmente não está no maximo.`}).catch(console.error);
     }catch(e){console.log(e)}
   }
 

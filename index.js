@@ -70,7 +70,7 @@ client.on('interactionCreate', interaction => {
 
 client.on('messageCreate', message => {
 
-  commands(client, message, prefix, guildid);
+  commands(client, message, prefix, guildid, datafile);
 
 });
 
