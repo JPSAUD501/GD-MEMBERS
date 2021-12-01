@@ -39,6 +39,11 @@ function keepAlive(datafile) {
     server.use(express.static(__dirname + '/poi'));
     res.sendFile(path.join(__dirname,'','poi/index-poi.html'));
   })
+
+  server.all('/poi-w', (req, res) => {
+    server.use(express.static(__dirname + '/poi'));
+    res.sendFile(path.join(__dirname,'','poi/index-poi-w.html'));
+  })
 }
 
  

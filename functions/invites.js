@@ -76,12 +76,26 @@ async function inviteChecker(invite, client, guildid, datafile){
       data.memberList[invite.inviter.id].points = data.memberList[invite.inviter.id].points - 1;
       saveData(datafile, data);
   }
-  console.log("New invite pre-authorized created (invites)")
+  console.log("New invite pre-authorized created (invites)");
 
   client.channels.cache.get("913590205485821992").send({content: `Parabens <@!${invite.inviter.id}>! O seu convite pré-aprovado foi criado com sucesso usando pontos do seu score do GD! Lembrando que esses pontos são atualizados diariamente!`}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 30000)}).catch();
 }
 
+async function inviteDeleted(invite, client, guildid, datafile){
+  console.log(invite);
+  return;
+  console.log("Cheking deleted invite:",invite.channel.name, invite.code,"(invites)");
+  if(invite.channel.id !== "913590205485821992") return;
+  if(invite.uses > 0) return;
+  var data = loadData(datafile);
+  if(data.memberList[invite.inviter.id].points >= data.memberList[invite.inviter.id].pointsMax) return;
+  data.memberList[invite.inviter.id].points = data.memberList[invite.inviter.id].points + 1;
+  console.log("Return points to inviter, unused invitation:",invite.inviter.user, invite.code,"(invites)");
+  saveData(datafile, data);
+}
+
 module.exports = {
   inviteChecker: inviteChecker,
-  checkAllInvites: checkAllInvites
+  checkAllInvites: checkAllInvites,
+  inviteDeleted: inviteDeleted
 }

@@ -2,7 +2,7 @@ const keepAlive = require("./keepalive");
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
 const {callName, commands} = require("./functions/features");
-const {inviteChecker, checkAllInvites} = require("./functions/invites");
+const {inviteChecker, checkAllInvites, inviteDeleted} = require("./functions/invites");
 const {afkCheck, afk, afkTyping, afkNewState} = require("./functions/gd-afk");
 const Discord = require("discord.js");
 const veterantime = 2592000;
@@ -84,6 +84,12 @@ client.on("voiceStateUpdate", (oldState, newState) => {
 client.on("inviteCreate", (invite) => {
 
   inviteChecker(invite, client, guildid, datafile);
+
+});
+
+client.on("inviteDelete", (invite) => {
+
+  inviteDeleted(invite, client, guildid, datafile);
 
 });
 
