@@ -44,6 +44,7 @@ async function inviteVerifyServer(invite, client, guildid, datafile){
 }
 
 async function inviteChecker(invite, client, guildid, datafile){
+  if (invite.guild.id !== guildid) return; 
   console.log("Cheking invite:",invite.channel.name, invite.code,"(invites)")
   if(invite.channel.id !== "913590205485821992") return;
   if(invite.uses > 1) return deleteInvite(client, invite,);
@@ -82,6 +83,7 @@ async function inviteChecker(invite, client, guildid, datafile){
 }
 
 async function inviteDeleted(invite, client, guildid, datafile){
+  if(invite.guild.id !== guildid) return;
   console.log(invite);
   return;
   console.log("Cheking deleted invite:",invite.channel.name, invite.code,"(invites)");

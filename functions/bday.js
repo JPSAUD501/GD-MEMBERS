@@ -1,4 +1,3 @@
-const Discord = require("discord.js");
 const {MessageEmbed} = require('discord.js')
 const {loadData, saveData} = require("./data");
 const moment = require('moment');

@@ -66,7 +66,6 @@ async function afkTyping(typing, client, guildid){
 
 async function afkNewState(oldState, newState, client, guildid){
   try{
-
   if(!oldState.channel){}else if(oldState.channel.parentId == "771255883543216171") return;
   if(!newState.channel){}else if(newState.channel.parentId == "771255883543216171") return;
 
@@ -91,6 +90,8 @@ async function afkNewState(oldState, newState, client, guildid){
 
 async function afk(oldState, newState, client, guildid){
   try{
+    if(oldState.guild.id !== guildid) return;
+    if(newState.guild.id !== guildid) return;
 
     const delay = ms => new Promise(res => setTimeout(res, ms));
 

@@ -24,7 +24,7 @@ function cFL(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function callName(client, guildid, datafile, fusotime){
+async function timerFunctions(client, guildid, datafile, fusotime){
   function everyMinute(){
   try{
     var data = loadData(datafile);
@@ -70,6 +70,43 @@ function callName(client, guildid, datafile, fusotime){
         });
       }catch(e){}      
     })}).catch(console.error);
+  }catch(e){console.log(e)}
+  }
+
+  async function privateServer(){
+  try{
+    var pGuildsIds = client.guilds.cache.map(guild => guild.id);
+    console.log("Guilds:", pGuildsIds, "(features)");
+    for (const i in pGuildsIds){
+      async function privates(){
+        if(pGuildsIds[i] == guildid) return;
+        if(pGuildsIds[i] == "720275637415182416") return;
+        console.log("Private guild:", pGuildsIds[i], "(features)");
+        var pGuild = await client.guilds.cache.get(pGuildsIds[i]);
+        if(pGuild.ownerId !== client.user.id) return;
+        var membersInVoicePrivateGuild = [];
+        pGuild.channels.cache.forEach(channel => {
+          if(channel.type !== 'GUILD_VOICE'){
+            if(channel.type !== 'GUILD_STAGE_VOICE') return;
+          }
+          channel.members.forEach(member => {
+            membersInVoicePrivateGuild.push(member.user.id);
+          });
+        });
+        var howManyMembersInCall = 0
+        for(const i in membersInVoicePrivateGuild){
+          howManyMembersInCall += 1;
+        }
+        if(howManyMembersInCall == 0){
+          if (pGuild.createdTimestamp + 300000 >= Date.now()) return;
+          if (pGuild.id == "720275637415182416") return;
+          if (pGuild.id !== guildid){
+            pGuild.delete().then(console.log("Private Guild deleted! (fetures)"));
+          }
+        }
+      }
+      await privates();
+    }
   }catch(e){console.log(e)}
   }
 
@@ -216,10 +253,12 @@ function callName(client, guildid, datafile, fusotime){
   every15Minutes();
   memberCounter();
   divRoles();
+  privateServer()
   var loop1 = setInterval(function(){ everyMinute(); }, 60000*1);
   var loop2 = setInterval(function(){ every15Minutes(); }, 60000*15);
-  var loop3 = setInterval(function(){ memberCounter(); }, 60000*10);
-  var loop3 = setInterval(function(){ divRoles(); }, 60000*0.5);
+  var loop3 = setInterval(async function(){ privateServer(); }, 60000*5);
+  var loop4 = setInterval(function(){ memberCounter(); }, 60000*10);
+  var loop5 = setInterval(function(){ divRoles(); }, 60000*0.5);
 }
 
 async function commands(client, message, prefix, guildid, datafile){
@@ -533,11 +572,47 @@ async function commands(client, message, prefix, guildid, datafile){
       message.reply({content: `O seu score atual no servidor é **${Math.round(points)}**\nLembrando que esse valor é gerado automaticamente com base no seu nivel no servidor principalmente.!\nO seu score é usado para autorizar novos membros ou gerar convites pré-aprovados, dessa forma se você realizou alguma dessas ações recentemente seu score provavelmente não está no maximo.`}).catch(console.error);
     }catch(e){console.log(e)}
   }
+  
+  if(msg[0] == "/private"){
+    if(message.channel.id !== "857811346048286720") return;
+    if(message.author.id !== process.env["ownerid"]) return;
+    try{
+      const createdGuild = await client.guilds.create("GD-PRIVATE", {
+            channels: [
+                {"name": "🌎┆geral-privado"},
+            ]
+      });
+      await createdGuild.roles.everyone.edit({
+        permissions:[]
+      }).catch(console.error);
+      await createdGuild.roles.create({
+        name: "『PRIMEIRO-MINISTRO』",
+        color:  "#F1C40F",
+        hoist: true,
+        permissions:["ADMINISTRATOR"],
+        reason: 'Create a insignia role!',
+      }).catch(console.error);
+      await createdGuild.roles.create({
+        name: "『MEMBRO』",
+        color:  "#BCC0C0",
+        hoist: true,
+        permissions:["VIEW_CHANNEL", "STREAM", "ADD_REACTIONS", "SEND_MESSAGES", "SEND_TTS_MESSAGES", "EMBED_LINKS", "ATTACH_FILES", "READ_MESSAGE_HISTORY", "MENTION_EVERYONE", "USE_EXTERNAL_EMOJIS", "CONNECT", "SPEAK", "USE_VAD", "CHANGE_NICKNAME", "USE_APPLICATION_COMMANDS", "USE_EXTERNAL_STICKERS", "SEND_MESSAGES_IN_THREADS", "START_EMBEDDED_ACTIVITIES"],
+        reason: 'Create a insignia role!',
+      }).catch(console.error);
+      await createdGuild.setIcon('./GD-PRIVATE.png');
+      const createdGuildChannel = createdGuild.channels.cache.find(channel => channel.name == "🌎┆geral-privado");
+      const createdGuildInvite = await createdGuildChannel.createInvite({maxAge: 0, unique: true, reason: ""}).catch(console.error);
+      message.reply(`Sem problemas! Acabei de enviar para você o link de convite de um servidor ultra secreto do GD! Esse servidor é temporario, ou seja, será deletado em até 5 minutos caso ninguem esteja em um canal de voz dele.\nAlguns avisos:\n- Apenas membros autorizados do GD podem entrar no servidor privado.\n- Sempre que alguem entrar no servidor privado uma mensagem no canal "🌎┆geral-privado" será enviada para avisar!\n- Esse link é a unica forma de entrar no servidor secreto, ele foi enviado apenas para você e para os moderadores do GD.`);
+      await client.channels.cache.get("919484652736094218").send({content: `O membro **"${message.author.username}" - ${message.author}** acabou de criar um servidor privado! Esse link de convite está sendo enviado para esse canal **apenas para fins de moderação**, por favor não o use caso nao seja nescessario!\n${createdGuildInvite.url}`}).catch(console.error);
+      await message.author.send(`Link de convite do servidor privado: ${createdGuildInvite.url}`);
+      createdGuild.channels.create("🦚┆covil-do-shrek", {type: 'GUILD_VOICE'});
+    }catch(e){console.log(e)}
+  }
 
   }catch(e){console.log(e)}
 }
 
 module.exports = {
-    callName: callName,
+    timerFunctions: timerFunctions,
     commands: commands
 };

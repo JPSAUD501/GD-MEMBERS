@@ -3,6 +3,8 @@ const {loadData, saveData, updateMemberData} = require("./data");
 const {timeToString} = require("./moment");
 
 async function newMember(client, guildid, member, datafile, fusotime, botrelease){
+  if(member.guild.id !== guildid) return;
+
   var data = loadData(datafile);
 
   if (data.memberList[member.id]) {
