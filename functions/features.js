@@ -574,8 +574,12 @@ async function commands(client, message, prefix, guildid, datafile){
   }
   
   if(msg[0] == "/private"){
-    if(message.channel.id !== "857811346048286720") return;
-    if(message.author.id !== process.env["ownerid"]) return;
+    if(message.channel.id !== "771257420470157322") return;
+    const guild = client.guilds.cache.get(guildid);
+    const user = await guild.members.fetch(message.author.id).catch(console.error);
+    if(!user) return message.reply({content: `Ocorreu um erro durante a execução do comando soliciatado! Contate um moderador ou tente novamente mais tarde.`}).catch(console.error);
+    if(memberLevel(user) < 40) return message.reply({content: "Para usar esse comando você precisa ser LvL 40 aqui no servidor. Para saber como verificar seu nível leia o canal <#768686751291408424>."}).catch(console.error);
+    console.log(`Creating new private server for ${message.author.username} (features)`);
     try{
       const createdGuild = await client.guilds.create("GD-PRIVATE", {
             channels: [
@@ -604,7 +608,7 @@ async function commands(client, message, prefix, guildid, datafile){
       const createdGuildInvite = await createdGuildChannel.createInvite({maxAge: 0, unique: true, reason: ""}).catch(console.error);
       await createdGuildChannel.send({content: `${createdGuild.roles.everyone}\n**LINK DE CONVITE DESTE SERVIDOR PRIVADO CRIADO POR ${message.author.username.toUpperCase()}: ${createdGuildInvite.url}**`}).catch(console.error);
       message.reply(`Sem problemas! Acabei de enviar para você o link de convite de um servidor ultra secreto do GD! Esse servidor é temporario, ou seja, será deletado em até 5 minutos caso ninguem esteja em um canal de voz dele.\nAlguns avisos:\n- Apenas membros autorizados do GD podem entrar no servidor privado.\n- Sempre que alguem entrar no servidor privado uma mensagem no canal "🌎┆geral-privado" será enviada para avisar!\n- Esse link é a unica forma de entrar no servidor secreto, ele foi enviado apenas para você e para os moderadores do GD.`);
-      await client.channels.cache.get("919484652736094218").send({content: `O membro **"${message.author.username}" - ${message.author}** acabou de criar um servidor privado! Esse link de convite está sendo enviado para esse canal **apenas para fins de moderação**, por favor não o use caso nao seja nescessario!\n${createdGuildInvite.url}`}).catch(console.error);
+      await client.channels.cache.get("919484652736094218").send({content: `O membro **"${message.author.username}" - ${message.author}** acabou de criar um servidor privado! Esse link de convite está sendo enviado para esse canal **apenas para fins de moderação**, por favor use apenas caso seja nescessário!\n${createdGuildInvite.url}`}).catch(console.error);
       await message.author.send(`Link de convite do servidor privado: ${createdGuildInvite.url}`);
       createdGuild.channels.create("🦚┆covil-do-shrek", {type: 'GUILD_VOICE'});
     }catch(e){console.log(e)}

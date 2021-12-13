@@ -1,4 +1,4 @@
-const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js')
+const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
 const {loadData, saveData, updateMemberData} = require("./data");
 const {timeToString} = require("./moment");
 

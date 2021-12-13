@@ -4,7 +4,7 @@ const {newMember, buttonClicked} = require("./functions/newMember");
 const {timerFunctions, commands} = require("./functions/features");
 const {inviteChecker, checkAllInvites, inviteDeleted} = require("./functions/invites");
 const {afkCheck, afk, afkTyping, afkNewState} = require("./functions/gd-afk");
-const {newPrivateGuildMember} = require("./functions/privateGuilds");
+const {newPrivateGuildMember, oldPrivateGuildMember, privateGuildCommand} = require("./functions/privateGuilds");
 const Discord = require("discord.js");
 const veterantime = 2592000;
 const fusotime = -10800000;
@@ -99,6 +99,18 @@ client.on("inviteDelete", (invite) => {
 client.on('guildMemberAdd', member => {
 
   newPrivateGuildMember(client, guildid, member);
+
+});
+
+client.on('guildMemberRemove', member => {
+
+  oldPrivateGuildMember(client, guildid, member);
+
+});
+
+client.on('messageCreate', message => {
+
+  privateGuildCommand(client, message, prefix, guildid);
 
 });
 

@@ -1,4 +1,5 @@
-const {MessageEmbed} = require('discord.js')
+const {MessageEmbed} = require('discord.js');
+const fetch = require("node-fetch");
 
 async function newPrivateGuildMember(client, guildid, member){
   if(member.guild.id == guildid) return;
@@ -40,7 +41,7 @@ async function newPrivateGuildMember(client, guildid, member){
     await member.roles.add(memberRolePrivate).catch(console.error);
 
     var embed = new MessageEmbed()
-            .setTitle(`O usuario ${member.user.username} acabou de entrar nesse servidor privado!`)
+            .setTitle(`O usuario ${member.user.username} acabou de entrar neste servidor privado!`)
             .setColor("#2ECC71")
             .setThumbnail(member.user.displayAvatarURL())
             .setDescription(`Bem vindo ${member.user}!`)
@@ -49,6 +50,55 @@ async function newPrivateGuildMember(client, guildid, member){
   }
 }
 
+async function oldPrivateGuildMember(client, guildid, member){
+  if(member.guild.id == guildid) return;
+  var guild = client.guilds.cache.get(guildid);
+  console.log("Member exited OK in private guild (privateGuilds)");
+  if((Date.now() - member.joinedTimestamp) <= 5000) return;
+  var embed = new MessageEmbed()
+          .setTitle(`O membro ${member.user.username} acabou de sair deste servidor privado!`)
+          .setColor("#FFA500")
+          .setThumbnail(member.user.displayAvatarURL())
+          .setDescription(`Até mais ${member.user}!`)
+  var mainChatChannel = await member.guild.channels.cache.find(channel => channel.name == "🌎┆geral-privado");
+  await mainChatChannel.send({content: `${guild.roles.everyone}`, embeds: [embed]}).catch(console.error);
+}
+
+async function privateGuildCommand(client, message, prefix, guildid){
+  if(message.guildId == guildid) return;
+
+  var msg = message.content.split(" ");
+  msg = msg.filter((a) => a);
+
+  if(msg[0] == "/youtube" || msg[0] == "/yt"){
+    console.log("YT Command in private guild (privateGuilds)");
+    const channel = message.member.voice.channel;
+    if (!channel || channel.type !== "GUILD_VOICE") return await message.reply("Entre no canal de voz desse servidor privado para poder iniciar o YouTube Together.");
+    fetch(`https://discord.com/api/v8/channels/${channel.id}/invites`, {
+            method: "POST",
+            body: JSON.stringify({
+                max_age: 86400,
+                max_uses: 0,
+                target_application_id: "755600276941176913", // youtube together
+                target_type: 2,
+                temporary: false,
+                validate: null
+            }),
+            headers: {
+                "Authorization": `Bot ${client.token}`,
+                "Content-Type": "application/json"
+            }}).then(res => res.json()).then(invite => {
+                if (invite.error || !invite.code) return message.reply("Entre no canal de voz desse servidor privado para poder iniciar o YouTube Together.");
+                message.reply(`**Link do YTT gerado com sucesso!**\n<https://discord.gg/${invite.code}>`);
+            }).catch(e => {
+                message.reply("Entre no canal de voz desse servidor privado para poder iniciar o YouTube Together.");
+            });
+  }
+  
+}
+
 module.exports = {
-    newPrivateGuildMember: newPrivateGuildMember
+    newPrivateGuildMember: newPrivateGuildMember,
+    oldPrivateGuildMember: oldPrivateGuildMember,
+    privateGuildCommand: privateGuildCommand
 };
