@@ -24,7 +24,7 @@ async function afkCheckProcess(client, guildid){
     var guild = await client.guilds.cache.get(guildid);
     for(var i in timer){
       if(!i) return;
-      if((timer[i] + (600*5) + (600*0.5)) >= Date.now()){
+      if((timer[i] + (60000*5) + (60000*0.5)) <= Date.now()){
         console.log("No longer afk - Time (gd-afk)");
         delete timer[i];
         guild.members.fetch(i).then(member => { 
