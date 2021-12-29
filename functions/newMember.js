@@ -119,7 +119,7 @@ function buttonClicked(client, interaction, datafile, guildid){
     if(user.user.id !== data.memberList[interaction.customId].id) return console.log("(newMember) (1) Error wrong id:", user.user.username, data.memberList[interaction.customId].user);
     if(user.user.id !== interaction.customId) return console.log("(newMember) (2) Error wrong id:", user.user.id, interaction.customId);
     if(user._roles.includes("721660842176806965")){
-      interaction.reply({content:`<@${interaction.user.id}> O membro que você tentou autorizar já foi aprovado!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      interaction.reply({content:`<@${interaction.user.id}> O membro que você tentou autorizar já foi aprovado anteriormente!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
       interaction.message.delete().catch();
       return console.log("(newMember) Error: Alredy MEMBER");
     } 
@@ -128,7 +128,11 @@ function buttonClicked(client, interaction, datafile, guildid){
     if(interaction.customId == interaction.user.id) return interaction.reply({content:`<@${interaction.customId}> Você não pode autorizar a si mesmo! Peça para quem te convidou ou para algum outro membro!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
 
     if(interaction.user.id !== process.env["ownerid"]){
-      if((data.memberList[interaction.user.id].points < 1) || (data.memberList[interaction.user.id].pointsMax < 1)) return interaction.reply({content:`<@${interaction.user.id}> Infelizmente você não possui nivel ou tempo no servidor suficiente para autorizar novos membros! Continue ganhando pontos e subindo de nivel!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      if((data.memberList[interaction.user.id].points < 1) || (data.memberList[interaction.user.id].pointsMax < 1)) return noPoints();
+      function noPoints(){
+        client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO NÃO CONCLUÍDA** - O membro **"${interaction.user.username}" - "<@${interaction.user.id}>"** tentou autorizar **"${user.user.username}" - "<@${user.id}>"** a ser membro do servidor porem não possuia pontos suficentes.`}).catch(console.error);
+        interaction.reply({content:`<@${interaction.user.id}> Infelizmente você não possui nivel ou tempo no servidor suficiente para autorizar novos membros! Continue ganhando pontos e subindo de nível!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      }
     }
 
     //Member authorizating data update
@@ -158,7 +162,7 @@ function buttonClicked(client, interaction, datafile, guildid){
             .setStyle("SUCCESS")
             .setDisabled(true)
             .setCustomId(`${interaction.customId}`)
-        )
+        );
 
     interaction.message.edit({ content: `<@${interaction.customId}>`, embeds: [embed], components: [row] });
     interaction.reply({content:`O membro <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
