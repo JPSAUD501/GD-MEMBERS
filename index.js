@@ -1,5 +1,6 @@
 //const keepAlive = require("./keepalive");
 //keepAlive(datafile);
+require('dotenv').config();
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
 const {timerFunctions, commands} = require("./functions/features");
