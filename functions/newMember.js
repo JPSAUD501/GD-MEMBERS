@@ -93,7 +93,7 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
     var roleMember = await guild.roles.cache.get("721660842176806965");
     user.roles.add(roleMember);
     data.memberList[user.id].authorized = true
-    data.memberList[user.id].authorizedTimeUnix = Date.now();
+    data.memberList[user.id].authorizedTimeUnix = Date.now()+fusotime;
     data.memberList[user.id].authorizedById = authInvite.inviter.id;
     data.memberList[user.id].authorizedByName = authInvite.inviter.username;
     console.log("Authorizing member pre-authorized and update data of inviter member (newMember)")
@@ -108,7 +108,7 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
   }
 }
 
-function buttonClicked(client, interaction, datafile, guildid){
+function buttonClicked(client, interaction, datafile, guildid, fusotime){
   try{
   if (!interaction.isButton()) return;
   var data = loadData(datafile);
@@ -143,7 +143,7 @@ function buttonClicked(client, interaction, datafile, guildid){
     var roleMember = guild.roles.cache.get("721660842176806965");
     user.roles.add(roleMember);
     data.memberList[interaction.customId].authorized = true
-    data.memberList[interaction.customId].authorizedTimeUnix = Date.now();
+    data.memberList[interaction.customId].authorizedTimeUnix = Date.now()+fusotime;
     data.memberList[interaction.customId].authorizedById = interaction.user.id;
     data.memberList[interaction.customId].authorizedByName = interaction.user.username;
     console.log("Authorizing member and update data of who clicked the button (newMember)")

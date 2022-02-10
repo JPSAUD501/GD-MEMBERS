@@ -9,7 +9,7 @@ const {afkCheck, afk, afkTyping, afkNewState} = require("./functions/gd-afk");
 const {newPrivateGuildMember, oldPrivateGuildMember, privateGuildCommand} = require("./functions/privateGuilds");
 const Discord = require("discord.js");
 const veterantime = 2592000;
-const fusotime = -10800000;
+const fusotime = 10800000;
 const botrelease = 1634452922000;
 const guildid = "720275637415182416";
 const datafile = "./site/data.json";
@@ -67,7 +67,7 @@ client.on('guildMemberAdd', member => {
 
 client.on('interactionCreate', interaction => {
 
-  buttonClicked(client, interaction, datafile, guildid);
+  buttonClicked(client, interaction, datafile, guildid, fusotime);
 
 });
 
@@ -106,7 +106,7 @@ client.on('guildMemberAdd', member => {
 
 client.on('guildMemberRemove', member => {
 
-  oldPrivateGuildMember(client, guildid, member);
+  oldPrivateGuildMember(client, guildid, member, fusotime);
 
 });
 
