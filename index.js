@@ -1,4 +1,5 @@
-const keepAlive = require("./keepalive");
+//const keepAlive = require("./keepalive");
+//keepAlive(datafile);
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
 const {timerFunctions, commands} = require("./functions/features");
@@ -13,7 +14,7 @@ const guildid = "720275637415182416";
 const datafile = "./site/data.json";
 const prefix = "/";
 
-keepAlive(datafile);
+
 
 const client = new Discord.Client({
   fetchAllMembers: true,

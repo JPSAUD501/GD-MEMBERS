@@ -9,12 +9,14 @@ function deleteInvite(client, invite, reason){
 
 async function checkAllInvites(client, guildid, datafile){
   async function checkAll(client, guildid, datafile){
-    console.log("Checking all invites! (invites)")
-    const guild = await client.guilds.cache.get(guildid);
-    const invites = await guild.invites.fetch()
-    invites.forEach(invite => {
-      inviteVerifyServer(invite, client, guildid, datafile);
-    });
+    try{
+      console.log("Checking all invites! (invites)")
+      const guild = await client.guilds.cache.get(guildid);
+      const invites = await guild.invites.fetch().catch(console.error);
+      invites.forEach(invite => {
+        inviteVerifyServer(invite, client, guildid, datafile);
+      });
+    }catch(e){console.log(e)}
   }
 
   checkAll(client, guildid, datafile);

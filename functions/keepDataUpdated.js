@@ -5,7 +5,7 @@ const moment = require('moment');
 moment.locale('pt-br');
 
 function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
-  saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
+  //saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
 
   function checkEveryMinute () {
     console.log('Checking!');
@@ -46,7 +46,7 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
       var list = Object.keys(data.memberList);
       for (const i in list){
         if(!i) return;
-        //bday(client, guildid, fusotime, datafile, data.memberList[list[i]]);
+        bday(client, guildid, fusotime, datafile, data.memberList[list[i]]);
       }
 
       //BKP data.json

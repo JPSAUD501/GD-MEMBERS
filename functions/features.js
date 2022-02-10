@@ -249,16 +249,47 @@ async function timerFunctions(client, guildid, datafile, fusotime){
   }catch(e){console.log(e)}
   }
 
+  function specialEvents(){
+    var timeNowFuso = Date.now()-10800000; 
+    var startWithFuso = 0-10800000; //Start Event
+    var endtWithFuso = 0-10800000; //End Event
+    var roleEventId = "id";
+    var eventName = `"Evento by GD"`
+    console.log("Special events check (features) (Now:", timeNowFuso, ")");
+    if(timeNowFuso < (startWithFuso)) return;
+    if(timeNowFuso > (endtWithFuso)) return;
+    console.log("Event running... (features)");
+    var guild = client.guilds.cache.get(guildid);
+    guild.channels.cache.forEach(channel => {
+      if(channel.parentId == "771255883543216171") return;
+      if(channel.type !== 'GUILD_VOICE') return;
+      channel.members.forEach(member => {
+        if(member.user.bot == true) return;
+        if(!member._roles.includes("721660842176806965")) return;
+
+        //Alterar parametros por evento
+        if(member._roles.includes(roleEventId)) return;
+        console.log(member.user.username,"- Still elegible (features)");
+        member.roles.add(guild.roles.cache.get(roleEventId)).then(member => {
+          client.channels.cache.get("919484652736094218").send({content: `O membro **"${member.user.username}" - ${member.user}** participou do evento **${eventName}** e recebeu com sucesso o emblema <@&${roleEventId}>!`}).catch(console.error);
+        }).catch(console.error);
+
+      });
+    });
+  }
+
   everyMinute();
   every15Minutes();
   memberCounter();
   divRoles();
-  privateServer()
+  privateServer();
+  specialEvents();
   var loop1 = setInterval(function(){ everyMinute(); }, 60000*1);
   var loop2 = setInterval(function(){ every15Minutes(); }, 60000*15);
   var loop3 = setInterval(async function(){ privateServer(); }, 60000*5);
   var loop4 = setInterval(function(){ memberCounter(); }, 60000*10);
   var loop5 = setInterval(function(){ divRoles(); }, 60000*0.5);
+  var loop6 = setInterval(function(){ specialEvents(); }, 60000*0.5);
 }
 
 async function commands(client, message, prefix, guildid, datafile){
@@ -313,7 +344,7 @@ async function commands(client, message, prefix, guildid, datafile){
   }
 
   if(msg[0] == "/crole" || msg[0] == "/cr" || msg[0] == "/createrole" || msg[0] == "/creater"){
-    if(message.channel.id !== "771257420470157322") return;
+    if(message.channel.id !== "771257420470157322" && message.channel.id !== "721647931433811998") return;
     if(message.author.id !== process.env["ownerid"]) return message.reply({content: "Apenas um administrador do BOT pode usar esse comando."}).catch(console.error);
 
     const guild = client.guilds.cache.get(guildid);
@@ -322,6 +353,8 @@ async function commands(client, message, prefix, guildid, datafile){
     args.shift();
 
     var memberGiftedId = null;
+
+    if(!args[0]) return message.reply({content: `Forneça um nome para o novo emblema. Ex: /createrole lindo-emblema`}).catch(console.error);
 
     if(args[0].startsWith("<@!")){
       memberGiftedId = args[0].replace("<@!", "").replace(">", "");
@@ -352,7 +385,7 @@ async function commands(client, message, prefix, guildid, datafile){
     }).catch(console.error);
   }
 
-  if(msg[0] == "/poi" || msg[0] == "/nr" || msg[0] == "/parouimpar" || msg[0] == "/novarodada"){
+  /*if(msg[0] == "/poi" || msg[0] == "/nr" || msg[0] == "/parouimpar" || msg[0] == "/novarodada"){
     try{
     async function round(){
       if(message.channel.id !== "771257420470157322") return;
@@ -560,7 +593,7 @@ async function commands(client, message, prefix, guildid, datafile){
         console.log(e);
       }
     }
-  }
+  }*/
 
   if(msg[0] == "a/m" && msg[1] == "stats"){
     if(message.channel.id !== "771257420470157322") return;
