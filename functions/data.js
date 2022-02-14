@@ -209,20 +209,20 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
         saveData(datafile, data);
       }
 
-      if(sinceDays(member.joinedTimestamp, 0) == null){
+      if(sinceDays(member.joinedTimestamp, fusotime) == null){
         if(restoreMemberData("pointsMax") !== pointsMaxLvl(member)){
           data.memberList[member.user.id].pointsMax = pointsMaxLvl(member);
           data.memberList[member.user.id].points = pointsMaxLvl(member);
           console.log("1 - Updating points and pointsMax (data)")
           saveData(datafile, data);
         }
-      } else if(sinceDays(member.joinedTimestamp, 0) >= 15){
+      } else if(sinceDays(member.joinedTimestamp, fusotime) >= 15){
         if(restoreMemberData("pointsMax") !== (pointsMaxLvl(member) + 2)){
           data.memberList[member.user.id].pointsMax = (pointsMaxLvl(member) + 2);
           console.log("2 - Updating pointsMax (data)")
           saveData(datafile, data);
         }
-      } else if(sinceDays(member.joinedTimestamp, 0) >= 1){
+      } else if(sinceDays(member.joinedTimestamp, fusotime) >= 1){
         if(restoreMemberData("pointsMax") !== (pointsMaxLvl(member) + 1)){
           data.memberList[member.user.id].pointsMax = (pointsMaxLvl(member) + 1);
           console.log("3 - Updating pointsMax (data)")
@@ -267,16 +267,16 @@ function updateMemberData(member, data, datafile, botrelease, fusotime, guildid,
          "user": member.user.username,
          "noob": (!member._roles.includes("721660842176806965")) ,
          "bot": member.user.bot,
-         "birthday": birthday(member.joinedTimestamp, -fusotime),
+         "birthday": birthday(member.joinedTimestamp, fusotime),
          "lastBdayMsg": restoreMemberData("lastBdayMsg"),
-         "age": age(member.joinedTimestamp, -fusotime),
-         "memberSinceDays": sinceDays(member.joinedTimestamp, -fusotime),
-         "memberSincePlusTime": sinceDays(member.joinedTimestamp, -fusotime) + parseFloat(0.235959 - parseFloat(moment(member.joinedTimestamp-fusotime).format('HHmmss'))/1000000),
-         "daysToBday": daysToBday(member.joinedTimestamp, -fusotime),
+         "age": age(member.joinedTimestamp, fusotime),
+         "memberSinceDays": sinceDays(member.joinedTimestamp, fusotime),
+         "memberSincePlusTime": sinceDays(member.joinedTimestamp, fusotime) + parseFloat(0.235959 - parseFloat(moment(member.joinedTimestamp-fusotime).format('HHmmss'))/1000000),
+         "daysToBday": daysToBday(member.joinedTimestamp, fusotime),
          "joinTimeUnix": member.joinedTimestamp,
-         "joinDate": moment(member.joinedTimestamp-fusotime).format('DD/MM/YYYY'),
-         "joinTime": moment(member.joinedTimestamp-fusotime).format('HH:mm:ss'),
-         "joinString": timeToString(member.joinedTimestamp, -fusotime),
+         "joinDate": moment(member.joinedTimestamp+fusotime).format('DD/MM/YYYY'),
+         "joinTime": moment(member.joinedTimestamp+fusotime).format('HH:mm:ss'),
+         "joinString": timeToString(member.joinedTimestamp, fusotime),
          "authorized": restoreMemberData("authorized"),
          "authorizedTimeUnix": restoreMemberData("authorizedTimeUnix"),
          "authorizedById": restoreMemberData("authorizedById"),

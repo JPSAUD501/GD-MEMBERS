@@ -7,9 +7,9 @@ const {timerFunctions, commands} = require("./functions/features");
 const {inviteChecker, checkAllInvites, inviteDeleted} = require("./functions/invites");
 const {afkCheck, afk, afkTyping, afkNewState} = require("./functions/gd-afk");
 const {newPrivateGuildMember, oldPrivateGuildMember, privateGuildCommand} = require("./functions/privateGuilds");
+const {memberExitedLog, memberJoinedLog} = require("./functions/logFunctions");
 const Discord = require("discord.js");
-const veterantime = 2592000;
-const fusotime = 10800000;
+const fusotime = -10800000;
 const botrelease = 1634452922000;
 const guildid = "720275637415182416";
 const datafile = "./data.json";
@@ -62,6 +62,13 @@ client.on("typingStart", typing => {
 client.on('guildMemberAdd', member => {
 
   newMember(client, guildid, member, datafile, fusotime, botrelease);
+  memberJoinedLog(client, guildid, member);
+
+});
+
+client.on('guildMemberRemove', member => {
+
+  memberExitedLog(client, guildid, member);
 
 });
 

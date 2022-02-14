@@ -4,8 +4,8 @@ const moment = require('moment');
 moment.locale('pt-br');
 
 function bday(client, guildid, fusotime, datafile, member){
-  var todayyear = moment(Date.now()).format('DD/MM/YYYY')
-  var todaymonth = moment(Date.now()).format('DD/MM')
+  var todayyear = moment(Date.now()+fusotime).format('DD/MM/YYYY')
+  var todaymonth = moment(Date.now()+fusotime).format('DD/MM')
   if(member.birthday == todaymonth){
     if(member.bot) return console.log("BOT (bday)");
     if(member.joinDate == todayyear) return console.log("Joined today (bday)");

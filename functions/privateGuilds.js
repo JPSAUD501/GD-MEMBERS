@@ -54,7 +54,7 @@ async function oldPrivateGuildMember(client, guildid, member, fusotime){
   if(member.guild.id == guildid) return;
   var guild = client.guilds.cache.get(guildid);
   console.log("Member exited OK in private guild (privateGuilds)");
-  if((Date.now()+fusotime - member.joinedTimestamp) <= 5000) return;
+  if((Date.now() - member.joinedTimestamp) <= 5000) return;
   var embed = new MessageEmbed()
           .setTitle(`O membro ${member.user.username} acabou de sair deste servidor privado!`)
           .setColor("#FFA500")

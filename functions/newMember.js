@@ -93,7 +93,7 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
     var roleMember = await guild.roles.cache.get("721660842176806965");
     user.roles.add(roleMember);
     data.memberList[user.id].authorized = true
-    data.memberList[user.id].authorizedTimeUnix = Date.now()+fusotime;
+    data.memberList[user.id].authorizedTimeUnix = Date.now();
     data.memberList[user.id].authorizedById = authInvite.inviter.id;
     data.memberList[user.id].authorizedByName = authInvite.inviter.username;
     console.log("Authorizing member pre-authorized and update data of inviter member (newMember)")
@@ -110,6 +110,7 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
 
 function buttonClicked(client, interaction, datafile, guildid, fusotime){
   try{
+  //console.log(interaction);
   if (!interaction.isButton()) return;
   var data = loadData(datafile);
   const guild = client.guilds.cache.get(guildid);
@@ -143,7 +144,7 @@ function buttonClicked(client, interaction, datafile, guildid, fusotime){
     var roleMember = guild.roles.cache.get("721660842176806965");
     user.roles.add(roleMember);
     data.memberList[interaction.customId].authorized = true
-    data.memberList[interaction.customId].authorizedTimeUnix = Date.now()+fusotime;
+    data.memberList[interaction.customId].authorizedTimeUnix = Date.now();
     data.memberList[interaction.customId].authorizedById = interaction.user.id;
     data.memberList[interaction.customId].authorizedByName = interaction.user.username;
     console.log("Authorizing member and update data of who clicked the button (newMember)")
@@ -164,7 +165,7 @@ function buttonClicked(client, interaction, datafile, guildid, fusotime){
             .setCustomId(`${interaction.customId}`)
         );
 
-    interaction.message.edit({ content: `<@${interaction.customId}>`, embeds: [embed], components: [row] });
+    interaction.message.edit({ content: `<@${interaction.customId}>`, embeds: [embed], components: [row] }).catch();
     interaction.reply({content:`O membro <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
     setTimeout(function(){ interaction.message.delete().catch() }, 60000);
     user.send(`Bem vindo ao GRUPO DISPARATE! Você foi autorizado por ${interaction.user.username}!\n\nVou pular o bla bla bla depois de "Bem Vindo" pois estou enviando essa mensagem para avisar que você pode escolher uma cor para o seu nome no canal "#📝┆seu-registro" ou pelo link: https://discord.com/channels/720275637415182416/729662955053907980/729671862220619807\n\nFlw!`);

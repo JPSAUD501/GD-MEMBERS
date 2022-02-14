@@ -34,7 +34,7 @@ async function timerFunctions(client, guildid, datafile, fusotime){
       if(!channel.name.includes("┊")) return;
       channel.members.forEach(member => {
         if(memberLevel(member) < 30) return;
-        if(data.memberList[member.user.id].birthday == birthday(Date.now(), 0)){
+        if(data.memberList[member.user.id].birthday == birthday(Date.now(), fusotime)){
           var gdvcallname = "🎊┊"+member.user.username
           if(channel.name == gdvcallname) return;
           if(channel.name.includes("🎊")) return;
@@ -98,7 +98,8 @@ async function timerFunctions(client, guildid, datafile, fusotime){
           howManyMembersInCall += 1;
         }
         if(howManyMembersInCall == 0){
-          if (pGuild.createdTimestamp + 300000 >= Date.now()+fusotime) return;
+          console.log(pGuild.createdTimestamp);
+          if (pGuild.createdTimestamp + 300000 >= Date.now()) return;
           if (pGuild.id == "720275637415182416") return;
           if (pGuild.id !== guildid){
             pGuild.delete().then(console.log("Private Guild deleted! (fetures)"));

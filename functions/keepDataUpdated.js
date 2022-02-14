@@ -10,7 +10,7 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
   function checkEveryMinute () {
     console.log('Checking!');
     var data = loadData(datafile);
-    var lastUpdate = moment(Date.now()).format('DD/MM/YYYY');
+    var lastUpdate = moment(Date.now()+fusotime).format('DD/MM/YYYY');
     if (JSON.stringify(lastUpdate) !== JSON.stringify(data.lastUpdate)) {
       //New day! Checking everything and send messages!
       const guild = client.guilds.cache.get(guildid);
@@ -38,7 +38,7 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
         
       //Last update
       data.lastUpdate = lastUpdate;
-      data.lastUpdateUnix = Date.now()+fusotime;
+      data.lastUpdateUnix = Date.now();
       console.log("New day update! (keepDataUpdated)");
       saveData(datafile, data);
 
@@ -50,7 +50,7 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
       }
 
       //BKP data.json
-      client.channels.cache.get(process.env['channelbkp']).send({content:`BKP - ${moment(Date.now()+0).format('DD/MM/YYYY')}`, files: ["./"+datafile]});
+      client.channels.cache.get(process.env['channelbkp']).send({content:`BKP - ${moment(Date.now()+fusotime).format('DD/MM/YYYY')}`, files: ["./"+datafile]});
     }
   }
 
