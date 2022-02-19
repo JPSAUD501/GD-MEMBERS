@@ -50,7 +50,7 @@ async function newPrivateGuildMember(client, guildid, member){
   }
 }
 
-async function oldPrivateGuildMember(client, guildid, member, fusotime){
+async function oldPrivateGuildMember(client, guildid, member){
   if(member.guild.id == guildid) return;
   var guild = client.guilds.cache.get(guildid);
   console.log("Member exited OK in private guild (privateGuilds)");

@@ -2,7 +2,7 @@ const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
 const {loadData, saveData, updateMemberData} = require("./data");
 const {timeToString} = require("./moment");
 
-async function newMember(client, guildid, member, datafile, fusotime, botrelease){
+async function newMember(client, guildid, member, datafile, botrelease){
   if(member.guild.id !== guildid) return;
 
   var data = loadData(datafile);
@@ -13,7 +13,7 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
     console.log("Member alrady in the data, deleting! (newMember)");
     saveData(datafile, data);
   }
-  updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client, 0);
+  updateMemberData(member, data, datafile, botrelease, guildid, client, 0);
   console.log("Saving new member data! (newMember)")
   saveData(datafile, data);
 
@@ -101,14 +101,14 @@ async function newMember(client, guildid, member, datafile, fusotime, botrelease
 
     //Sending message to member and logging in the mod channel
     user.send(`Bem vindo ao GRUPO DISPARATE! Você foi convidado por ${authInvite.inviter.username}!\n\nVou pular o bla bla bla depois de "Bem Vindo" pois estou enviando essa mensagem para avisar que você pode escolher uma cor para o seu nome no canal "#📝┆seu-registro" ou pelo link: https://discord.com/channels/720275637415182416/729662955053907980/729671862220619807\n\nFlw!`);
-    client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO** - O membro **"${user.user.username}" - "<@${user.id}>"** entrou usando um link pré aprovado criado por **"${authInvite.inviter.username}" - "<@${authInvite.inviter.id}>"** na **${timeToString(authInvite.createdTimestamp, fusotime)}**.`}).catch(console.error);
+    client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO** - O usuário **"${user.user.username}" - "<@${user.id}>"** entrou usando um link pré aprovado criado por **"${authInvite.inviter.username}" - "<@${authInvite.inviter.id}>"** na **${timeToString(authInvite.createdTimestamp)}**. **(PONTOS ATUAIS DO MEMBRO AUTORIZADOR: ${data.memberList[authInvite.inviter.id].points}/${data.memberList[authInvite.inviter.id].pointsMax})**`}).catch(console.error);
 
   } else{
     createMsg();
   }
 }
 
-function buttonClicked(client, interaction, datafile, guildid, fusotime){
+function buttonClicked(client, interaction, datafile, guildid){
   try{
   //console.log(interaction);
   if (!interaction.isButton()) return;
@@ -131,7 +131,7 @@ function buttonClicked(client, interaction, datafile, guildid, fusotime){
     if(interaction.user.id !== process.env["ownerid"]){
       if((data.memberList[interaction.user.id].points < 1) || (data.memberList[interaction.user.id].pointsMax < 1)) return noPoints();
       function noPoints(){
-        client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO NÃO CONCLUÍDA** - O membro **"${interaction.user.username}" - "<@${interaction.user.id}>"** tentou autorizar **"${user.user.username}" - "<@${user.id}>"** a ser membro do servidor porem não possuia pontos suficentes.`}).catch(console.error);
+        client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO NÃO CONCLUÍDA** - O usuário **"${interaction.user.username}" - "<@${interaction.user.id}>"** tentou autorizar **"${user.user.username}" - "<@${user.id}>"** a ser membro do servidor porem não possuia pontos suficentes. **(PONTOS ATUAIS DO MEMBRO AUTORIZADOR: ${data.memberList[interaction.user.id].points}/${data.memberList[interaction.user.id].pointsMax})**`}).catch(console.error);
         interaction.reply({content:`<@${interaction.user.id}> Infelizmente você não possui nivel ou tempo no servidor suficiente para autorizar novos membros! Continue ganhando pontos e subindo de nível!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
       }
     }
@@ -166,20 +166,20 @@ function buttonClicked(client, interaction, datafile, guildid, fusotime){
         );
 
     interaction.message.edit({ content: `<@${interaction.customId}>`, embeds: [embed], components: [row] }).catch();
-    interaction.reply({content:`O membro <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+    interaction.reply({content:`O usuário <@${interaction.customId}> foi autorizado com sucesso por <@${interaction.user.id}>`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
     setTimeout(function(){ interaction.message.delete().catch() }, 60000);
     user.send(`Bem vindo ao GRUPO DISPARATE! Você foi autorizado por ${interaction.user.username}!\n\nVou pular o bla bla bla depois de "Bem Vindo" pois estou enviando essa mensagem para avisar que você pode escolher uma cor para o seu nome no canal "#📝┆seu-registro" ou pelo link: https://discord.com/channels/720275637415182416/729662955053907980/729671862220619807\n\nFlw!`);
     if(interaction.user.id == process.env["ownerid"]){
-      client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO** - O membro **"${user.user.username}" - "<@${user.id}>"** foi autorizado a ser membro do servidor por **"${interaction.user.username}" - "<@${interaction.user.id}>"**.`}).catch(console.error);
+      client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO** - O usuário **"${user.user.username}" - "<@${user.id}>"** foi autorizado a ser membro do servidor por **"${interaction.user.username}" - "<@${interaction.user.id}>"**. (NENHUM PONTO USADO)`}).catch(console.error);
     }
     else{
-      client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO** - O membro **"${user.user.username}" - "<@${user.id}>"** foi autorizado a ser membro do servidor por **"${interaction.user.username}" - "<@${interaction.user.id}>"** usando **1** ponto dos seus **${data.memberList[interaction.user.id].points + 1}**.`}).catch(console.error);
+      client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO** - O usuário **"${user.user.username}" - "<@${user.id}>"** foi autorizado a ser membro do servidor por **"${interaction.user.username}" - "<@${interaction.user.id}>"** usando **1** ponto. **(PONTOS ATUAIS DO MEMBRO AUTORIZADOR: ${data.memberList[interaction.user.id].points}/${data.memberList[interaction.user.id].pointsMax})**`}).catch(console.error);
     }
   }).catch(function(error){
       console.log(error);
-      interaction.reply({content:`<@${interaction.user.id}> Parece que membro não está mais presente no seridor! Convide ele novamente! / Caso seja um erro por favor contate um moderador no canal <#899842424401178694>.`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      interaction.reply({content:`<@${interaction.user.id}> Parece que usuário não está mais presente no seridor! Convide ele novamente! / Caso seja um erro por favor contate um moderador no canal <#899842424401178694>.`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
       interaction.message.delete().catch();
-      return console.log("(newMember) Error: Member probaly exit the server");
+      return console.log("(newMember) Error: User probaly exit the server");
     }
   );
 }catch(e){console.log(e)}

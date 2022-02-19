@@ -4,13 +4,14 @@ const {deleteFromList} = require("./oldMembers")
 const moment = require('moment');
 moment.locale('pt-br');
 
-function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
+async function keepDataUpdated(client, botrelease, guildid, datafile){
   //saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
 
-  function checkEveryMinute () {
+  async function checkEveryMinute () {
     console.log('Checking!');
     var data = loadData(datafile);
-    var lastUpdate = moment(Date.now()+fusotime).format('DD/MM/YYYY');
+    var lastUpdate = moment(Date.now()).format('DD/MM/YYYY');
+    console.log("Day: " + lastUpdate);
     if (JSON.stringify(lastUpdate) !== JSON.stringify(data.lastUpdate)) {
       //New day! Checking everything and send messages!
       const guild = client.guilds.cache.get(guildid);
@@ -18,7 +19,7 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
       guild.members.cache.each(member => {
         memberCounterNumber++
         console.log(memberCounterNumber,"Members");
-        updateMemberData(member, data, datafile, botrelease, fusotime, guildid, client, memberCounterNumber);
+        updateMemberData(member, data, datafile, botrelease, guildid, client, memberCounterNumber);
       });
 
       data = loadData(datafile);
@@ -46,17 +47,16 @@ function keepDataUpdated(client, fusotime, botrelease, guildid, datafile){
       var list = Object.keys(data.memberList);
       for (const i in list){
         if(!i) return;
-        bday(client, guildid, fusotime, datafile, data.memberList[list[i]]);
+        await bday(client, guildid, datafile, data.memberList[list[i]]);
       }
 
       //BKP data.json
-      client.channels.cache.get(process.env['channelbkp']).send({content:`BKP - ${moment(Date.now()+fusotime).format('DD/MM/YYYY')}`, files: ["./"+datafile]});
+      client.channels.cache.get(process.env['channelbkp']).send({content:`BKP - ${moment(Date.now()).format('DD/MM/YYYY')}`, files: ["./"+datafile]});
     }
   }
 
 checkEveryMinute();
-var interval = setInterval(function () { checkEveryMinute(); }, 60000);
-
+  var interval = setInterval(function () { checkEveryMinute(); }, 60000);
 }
 
 module.exports = {

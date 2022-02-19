@@ -1,37 +1,37 @@
 const moment = require('moment');
 moment.locale('pt-br');
 
-function timeToString(unix, fuso){
-  return moment(unix+fuso).format('LLLL');
+function timeToString(unix){
+  return moment(unix).format('LLLL');
 }
 
-function birthday(unix, fuso){
-  return (moment(unix+fuso).date().toString().padStart(2, '0') + "/" + (moment(unix+fuso).month()+1).toString().padStart(2, '0'));
+function birthday(unix){
+  return (moment(unix).date().toString().padStart(2, '0') + "/" + (moment(unix).month()+1).toString().padStart(2, '0'));
 }
 
-function md(unix, fuso){
-  return ((moment(unix+fuso).month()+1).toString().padStart(2, '0') + "/" + moment(unix+fuso).date().toString().padStart(2, '0'));
+function md(unix){
+  return ((moment(unix).month()+1).toString().padStart(2, '0') + "/" + moment(unix).date().toString().padStart(2, '0'));
 }
 
-function age(unix,  fuso){
-  if(parseInt(md(unix, fuso).replace(/\//gi, "")) > parseInt(md(Date.now(), fuso).replace(/\//gi, ""))){
-    return (moment(Date.now()+fuso).year() - moment(unix+fuso).year() - 1);
+function age(unix){
+  if(parseInt(md(unix).replace(/\//gi, "")) > parseInt(md(Date.now()).replace(/\//gi, ""))){
+    return (moment(Date.now()).year() - moment(unix).year() - 1);
   } else{
-    return (moment(Date.now()+fuso).year() - moment(unix+fuso).year());
+    return (moment(Date.now()).year() - moment(unix).year());
   }
 }
 
-function sinceDays(unix,  fuso){
-  let a = moment(moment(Date.now()+fuso).format('DD/MM/YYYY'), 'DD/MM/YYYY');
-  let b = moment(moment(unix+fuso).format('DD/MM/YYYY'), 'DD/MM/YYYY');
+function sinceDays(unix){
+  let a = moment(moment(Date.now()).format('DD/MM/YYYY'), 'DD/MM/YYYY');
+  let b = moment(moment(unix).format('DD/MM/YYYY'), 'DD/MM/YYYY');
   return a.diff(b, "days");
 }
 
 function daysToBday(unix, fuso){
-    if(Math.ceil(moment(birthday(unix, fuso)+"/"+moment(Date.now()+fuso).year(), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true)) > 0 ){
-      return Math.ceil(moment(birthday(unix, fuso)+"/"+moment(Date.now()+fuso).year(), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true));
+    if(Math.ceil(moment(birthday(unix)+"/"+moment(Date.now()).year(), "DD/MM/YYYY").diff(Date.now(), 'days', true)) > 0 ){
+      return Math.ceil(moment(birthday(unix)+"/"+moment(Date.now()).year(), "DD/MM/YYYY").diff(Date.now(), 'days', true));
     } else{
-      return Math.ceil(moment(birthday(unix, fuso)+"/"+(moment(Date.now()+fuso).year()+1), "DD/MM/YYYY").diff(Date.now()+fuso, 'days', true));
+      return Math.ceil(moment(birthday(unix)+"/"+(moment(Date.now()).year()+1), "DD/MM/YYYY").diff(Date.now(), 'days', true));
     }
  }
 

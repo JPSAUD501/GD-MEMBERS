@@ -9,7 +9,6 @@ const {afkCheck, afk, afkTyping, afkNewState} = require("./functions/gd-afk");
 const {newPrivateGuildMember, oldPrivateGuildMember, privateGuildCommand} = require("./functions/privateGuilds");
 const {memberExitedLog, memberJoinedLog} = require("./functions/logFunctions");
 const Discord = require("discord.js");
-const fusotime = -10800000;
 const botrelease = 1634452922000;
 const guildid = "720275637415182416";
 const datafile = "./data.json";
@@ -44,60 +43,60 @@ const client = new Discord.Client({
 
 
 
-client.on("ready", () => {
+client.on("ready", async () => {
   
-  keepDataUpdated(client, fusotime, botrelease, guildid, datafile);
-  timerFunctions(client, guildid, datafile, fusotime);
+  await keepDataUpdated(client, botrelease, guildid, datafile);
+  timerFunctions(client, guildid, datafile);
   afkCheck(client, guildid);
   checkAllInvites(client, guildid, datafile);
 
 });
 
-client.on("typingStart", typing => {
+client.on("typingStart", async typing => {
 
   afkTyping(typing, client, guildid);
   
 });
 
-client.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', async member => {
 
-  newMember(client, guildid, member, datafile, fusotime, botrelease);
+  newMember(client, guildid, member, datafile, botrelease);
   memberJoinedLog(client, guildid, member);
 
 });
 
-client.on('guildMemberRemove', member => {
+client.on('guildMemberRemove', async member => {
 
   memberExitedLog(client, guildid, member);
 
 });
 
-client.on('interactionCreate', interaction => {
+client.on('interactionCreate', async interaction => {
 
-  buttonClicked(client, interaction, datafile, guildid, fusotime);
+  buttonClicked(client, interaction, datafile, guildid);
 
 });
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async message => {
 
   commands(client, message, prefix, guildid, datafile);
 
 });
 
-client.on("voiceStateUpdate", (oldState, newState) => {
+client.on("voiceStateUpdate", async (oldState, newState) => {
 
   afk(oldState, newState, client, guildid);
   afkNewState(oldState, newState, client, guildid);
 
 });
 
-client.on("inviteCreate", (invite) => {
+client.on("inviteCreate", async invite => {
 
   inviteChecker(invite, client, guildid, datafile);
 
 });
 
-client.on("inviteDelete", (invite) => {
+client.on("inviteDelete", async invite => {
 
   inviteDeleted(invite, client, guildid, datafile);
 
@@ -105,19 +104,19 @@ client.on("inviteDelete", (invite) => {
 
 //-------------- GD-PRIVATE
 
-client.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', async member => {
 
   newPrivateGuildMember(client, guildid, member);
 
 });
 
-client.on('guildMemberRemove', member => {
+client.on('guildMemberRemove', async member => {
 
-  oldPrivateGuildMember(client, guildid, member, fusotime);
+  oldPrivateGuildMember(client, guildid, member);
 
 });
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async message => {
 
   privateGuildCommand(client, message, prefix, guildid);
 

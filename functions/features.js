@@ -1,5 +1,6 @@
 const allEmojis = require("./emojis").allEmojis
 const {saveData, loadData, memberLevel} = require("./data");
+const { newMemberCard, bdayMemberCard } = require("./cardMaker");
 const {birthday} = require("./moment");
 const emojiRegex = require('emoji-regex');
 const regex = emojiRegex();
@@ -24,7 +25,7 @@ function cFL(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-async function timerFunctions(client, guildid, datafile, fusotime){
+async function timerFunctions(client, guildid, datafile){
   function everyMinute(){
   try{
     var data = loadData(datafile);
@@ -34,7 +35,7 @@ async function timerFunctions(client, guildid, datafile, fusotime){
       if(!channel.name.includes("┊")) return;
       channel.members.forEach(member => {
         if(memberLevel(member) < 30) return;
-        if(data.memberList[member.user.id].birthday == birthday(Date.now(), fusotime)){
+        if(data.memberList[member.user.id].birthday == birthday(Date.now())){
           var gdvcallname = "🎊┊"+member.user.username
           if(channel.name == gdvcallname) return;
           if(channel.name.includes("🎊")) return;
@@ -386,216 +387,6 @@ async function commands(client, message, prefix, guildid, datafile){
     }).catch(console.error);
   }
 
-  /*if(msg[0] == "/poi" || msg[0] == "/nr" || msg[0] == "/parouimpar" || msg[0] == "/novarodada"){
-    try{
-    async function round(){
-      if(message.channel.id !== "771257420470157322") return;
-      if(!message.member._roles.includes("911416704935022592")) return message.reply({content: `Você precisa ser um <@&911416704935022592> para poder iniciar uma nova rodada de Par Ou Ímpar.`}).catch(console.error);
-      if(timerPoi["newRound"] && (((Date.now()-timerPoi["newRound"]) / 1000) < 50 )) return message.reply({content: `Aguarde mais ${parseInt(50 - ((Date.now()-timerPoi["newRound"]) / 1000))} segundos para iniciar uma nova rodada de Par Ou Ímpar.`}).catch(console.error);
-
-      var args = msg;
-      args.shift();
-
-      if(!args[0])  return message.reply({content: `Por favor mencione o jogador numero 1 (PAR) e em seguida o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`}).catch(console.error);
-      if(!args[0].startsWith("<@!")) return message.reply({content: `Por favor mencione o jogador numero 1 (PAR) e em seguida o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`});
-      var player1id = msg[0].replace("<@!", "").replace(">", "");
-      if(!args[1]) return message.reply({content: `Por favor mencione o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`}).catch(console.error);
-      if(!args[1].startsWith("<@!")) return message.reply({content: `Por favor mencione o jogador numero 2 (ÍMPAR) para iniciar uma nova rodada.`}).catch(console.error);
-      var player2id = msg[1].replace("<@!", "").replace(">", "");
-
-      const guild = client.guilds.cache.get(guildid);
-      timerPoi["newRound"] = Date.now();
-      const delay = ms => new Promise(res => setTimeout(res, ms));
-
-      player1 = await guild.members.fetch(player1id).catch(console.error);
-      player2 = await guild.members.fetch(player2id).catch(console.error);
-
-      message.reply({content: `Nova rodada iniciada! ${player1.user.username} como PAR e ${player2.user.username} como ÍMPAR.`}).catch(console.error);
-      var datapoi = {};
-      datapoi["text"] = "";
-      datapoi.text = `Nova rodada!<br>${player1.user.username.toUpperCase()} vs ${player2.user.username.toUpperCase()}`
-      saveData("./poi/poi.json", datapoi);
-
-      timerPoi["newRoundStart"] = Date.now();
-      player1.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 1 ou seja, PAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`}).catch(console.error);
-      player2.send({content: `Desconsidere essa mensagem caso você não esteja em uma rodada de Par Ou Ímpar do Grupo Disparate, provavelmente foi um engano do organizador da rodada!\n\n**Você é o jogador numero 2 ou seja, ÍMPAR, dessa rodada de Par Ou Ímpar, envie um numero de 1 a 10 em até 30 segundos para participar! (Vai valer o ultimo numero que você enviou dentro do periodo permitido)**`}).catch(console.error);
-      await delay(5000);
-      
-      datapoi.text = `Aguardando resposta dos jogadores!<br>30`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>29`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>28`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>27`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>26`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>25`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>24`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>23`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>22`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>21`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>20`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>19`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>18`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>17`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>16`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>15`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>14`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>13`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>12`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>11`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>10`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>9`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>8`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>7`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>6`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>5`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>4`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>3`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>2`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>1`
-      saveData("./poi/poi.json", datapoi);
-      await delay(1000);
-      datapoi.text = `Aguardando resposta dos jogadores!<br>0`
-      saveData("./poi/poi.json", datapoi);
-      timerPoi["newRoundEnd"] = Date.now();
-      await delay(1000);
-      datapoi.text = `Fim do prazo de resposta!<br>Computando resultado!`
-      saveData("./poi/poi.json", datapoi);
-      await delay(4000);
-
-      var player1LM = player1.user.dmChannel.lastMessage;
-      var player2LM = player2.user.dmChannel.lastMessage;
-
-      if((player1LM.createdTimestamp < timerPoi["newRoundStart"]) || (player1LM.createdTimestamp > timerPoi["newRoundEnd"])) return message.reply({content: `O jogador ${player1.user.username} enviou um numero fora do prazo de 10 segundos.`}).catch(console.error);
-      if((player2LM.createdTimestamp < timerPoi["newRoundStart"]) || (player2LM.createdTimestamp > timerPoi["newRoundEnd"])) return message.reply({content: `O jogador ${player2.user.username} enviou um numero fora do prazo de 10 segundos.`}).catch(console.error);
-
-      if(player1LM.author.bot){
-        message.reply({content: `O jogador ${player1.user.username} não enviou um numero.`}).catch(console.error);
-        datapoi.text = `Jogador ${player1.user.username} não fez uma jogada<br>Fim da rodada!`
-        saveData("./poi/poi.json", datapoi);
-        await delay(2000);
-        throw "ok";
-      }
-      if(player2LM.author.bot){
-        message.reply({content: `O jogador ${player2.user.username} não enviou um numero.`}).catch(console.error);
-        datapoi.text = `Jogador ${player2.user.username} não fez uma jogada<br>Fim da rodada!`
-        saveData("./poi/poi.json", datapoi);
-        await delay(2000);
-        throw "ok";
-      }
-
-      var player1Msg = player1LM.content.replace(" ", "");
-      var player2Msg = player2LM.content.replace(" ", "");
-      var player1Value = null;
-      var player2Value = null;
-
-      if((parseInt(player1Msg) <= 10) && (parseInt(player1Msg) >= 1)){
-        player1Value = parseInt(player1Msg);
-      }else{
-        message.reply({content: `O jogador ${player1.user.username} enviou um numero invalido: "${player1Msg}"`}).catch(console.error);
-        datapoi.text = `Numero invalido de ${player1.user.username}<br>Fim da rodada!`
-        saveData("./poi/poi.json", datapoi);
-        await delay(2000);
-        throw "ok";
-      }
-      if((parseInt(player2Msg) <= 10) && (parseInt(player2Msg) >= 1)){
-        player2Value = parseInt(player2Msg);
-      }else{
-        message.reply({content: `O jogador ${player2.user.username} enviou um numero invalido: "${player1Msg}"`}).catch(console.error);
-        datapoi.text = `Numero invalido de ${player2.user.username}<br>Fim da rodada!`
-        saveData("./poi/poi.json", datapoi);
-        await delay(2000);
-        throw "ok";
-      }
-
-      var evenOrOdd = isOdd(player1Value+player2Value);
-      if(evenOrOdd == 0){
-        //Par
-        datapoi.text = `${player1.user.username} ganhou!<br>${player1.user.username}: ${player1Value} + ${player2Value} :${player2.user.username}<br>${player1Value+player2Value} é par!`
-        saveData("./poi/poi.json", datapoi);
-        message.author.send({content: `O jogador <@!${player1.user.id}> ganhou! <@!${player1.user.id}> jogou ${player1Value} e o <@!${player2.user.id}> jogou ${player2Value}.`}).catch(console.error);
-        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`}).catch(console.error);
-        await delay(10000);
-      }
-      if(evenOrOdd == 1){
-        //Impar
-        datapoi.text = `${player2.user.username} ganhou!<br>${player1.user.username}: ${player1Value} + ${player2Value} :${player2.user.username}<br>${player1Value+player2Value} é ímpar!`
-        saveData("./poi/poi.json", datapoi);
-        message.author.send({content: `O jogador <@!${player2.user.id}> ganhou! <@!${player2.user.id}> jogou ${player2Value} e o <@!${player1.user.id}> jogou ${player1Value}.`}).catch(console.error);
-        message.reply({content: `Fim da rodada! Enviando resultado para o site e organizador da rodada!`}).catch(console.error);
-        await delay(10000);
-      }
-    }
-
-    await round();
-    console.log("End of round (features)");
-    saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
-    }catch(e){
-      saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
-      console.log("End of round error (features)");
-      if(e !== "ok") {
-        message.reply({content: `Foi detectado um erro de codigo ALPHA durante a execução do comando, pedimos desculpas pelo incoveniente! Tente novamente em alguns segundos por favor.`}).catch(console.error);
-        console.log(e);
-      }
-    }
-  }*/
-
   if(msg[0] == "a/m" && msg[1] == "stats"){
     if(message.channel.id !== "771257420470157322") return;
     try{
@@ -646,6 +437,36 @@ async function commands(client, message, prefix, guildid, datafile){
       await message.author.send(`Link de convite do servidor privado: ${createdGuildInvite.url}`);
       createdGuild.channels.create("🦚┆covil-do-shrek", {type: 'GUILD_VOICE'});
     }catch(e){console.log(e)}
+  }
+
+  if(msg[0] == "/card1"){
+    if(message.channel.id !== "857811346048286720") return;
+    const guild = client.guilds.cache.get(guildid);
+    const member = await guild.members.fetch(message.author.id).catch(console.error);
+    if(!member) return message.reply({content: `Ocorreu um erro durante a execução do comando soliciatado! Contate um moderador ou tente novamente mais tarde.`}).catch(console.error);
+    const cardImg = await newMemberCard(guildid, member);
+    await message.reply({
+        files: [{
+            attachment: cardImg,
+            name: 'card.png' 
+        }]
+    }).catch();
+  }
+  if(msg[0] == "/card2"){
+    if(message.channel.id !== "857811346048286720") return;
+    const guild = client.guilds.cache.get(guildid);
+    const member = await guild.members.fetch(message.author.id).catch(console.error);
+    if(!member) return message.reply({content: `Ocorreu um erro durante a execução do comando soliciatado! Contate um moderador ou tente novamente mais tarde.`}).catch(console.error);
+    const data = loadData(datafile);
+    const memberData = data.memberList[member.id];
+    if(!memberData) return message.reply({content: `Ocorreu um erro durante a execução do comando soliciatado! Contate um moderador ou tente novamente mais tarde.`}).catch(console.error);
+    const cardImg = await bdayMemberCard(guildid, memberData);
+    await message.reply({
+        files: [{
+            attachment: cardImg,
+            name: 'card.png' 
+        }]
+    }).catch();
   }
 
   }catch(e){console.log(e)}
