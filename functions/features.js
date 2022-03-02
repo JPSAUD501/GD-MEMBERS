@@ -15,8 +15,6 @@ var roleDivMain = "909710113907023893";
 var roleStaff = "909713172653543454";
 var roleInsignia = "909711093537079346";
 
-function isOdd(num) { return num % 2;}
-
 function get_random (list) {
   return list[Math.floor((Math.random()*list.length))];
 }

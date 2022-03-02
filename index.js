@@ -1,5 +1,3 @@
-//const keepAlive = require("./keepalive");
-//keepAlive(datafile);
 require('dotenv').config();
 const {keepDataUpdated} = require("./functions/keepDataUpdated");
 const {newMember, buttonClicked} = require("./functions/newMember");
@@ -7,6 +5,7 @@ const {timerFunctions, commands} = require("./functions/features");
 const {inviteChecker, checkAllInvites, inviteDeleted} = require("./functions/invites");
 const {afkCheck, afk, afkTyping, afkNewState} = require("./functions/gd-afk");
 const {newPrivateGuildMember, oldPrivateGuildMember, privateGuildCommand} = require("./functions/privateGuilds");
+const {channelName} = require("./functions/channelName");
 const {memberExitedLog, memberJoinedLog} = require("./functions/logFunctions");
 const Discord = require("discord.js");
 const botrelease = 1634452922000;
@@ -87,6 +86,7 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
 
   afk(oldState, newState, client, guildid);
   afkNewState(oldState, newState, client, guildid);
+  channelName(oldState, newState, client, guildid);
 
 });
 

@@ -1,5 +1,6 @@
 const {MessageEmbed} = require('discord.js');
 const fetch = require("node-fetch");
+const axios = require('axios');
 
 async function newPrivateGuildMember(client, guildid, member){
   if(member.guild.id == guildid) return;
@@ -73,27 +74,31 @@ async function privateGuildCommand(client, message, prefix, guildid){
   if(msg[0] == "/youtube" || msg[0] == "/yt"){
     console.log("YT Command in private guild (privateGuilds)");
     const channel = message.member.voice.channel;
-    if (!channel || channel.type !== "GUILD_VOICE") return await message.reply("Entre no canal de voz desse servidor privado para poder iniciar o YouTube Together.");
-    fetch(`https://discord.com/api/v8/channels/${channel.id}/invites`, {
-            method: "POST",
-            body: JSON.stringify({
-                max_age: 86400,
-                max_uses: 0,
-                target_application_id: "755600276941176913", // youtube together
-                target_type: 2,
-                temporary: false,
-                validate: null
-            }),
-            headers: {
-                "Authorization": `Bot ${client.token}`,
-                "Content-Type": "application/json"
-            }}).then(res => res.json()).then(invite => {
-                if (invite.error || !invite.code) return message.reply("Entre no canal de voz desse servidor privado para poder iniciar o YouTube Together.");
-                message.reply(`**Link do YTT gerado com sucesso!**\n<https://discord.gg/${invite.code}>`);
-            }).catch(e => {
-                message.reply("Entre no canal de voz desse servidor privado para poder iniciar o YouTube Together.");
-            });
-  }
+    if (!channel || channel.type !== "GUILD_VOICE") return await message.reply("Entre no canal de voz desse servidor privado para poder iniciar o Open Together Tube.");
+    try{
+      const tokenOTT = await axios.get('https://opentogethertube.com/api/auth/grant')
+      const configOTT = {
+        headers: { Authorization: `Bearer ${tokenOTT.data.token}` }
+      };
+      const bodyParametersOTT = {
+        key: "value"
+      };
+      const responseOTT = await axios.post('https://opentogethertube.com/api/room/generate', bodyParametersOTT, configOTT)
+      const roomOTTLink = `https://ottr.cc/${responseOTT.data.room}`
+
+      await message.reply({
+        embeds: [new MessageEmbed()
+          .setThumbnail("https://raw.githubusercontent.com/JPSAUD501/FILES/master/gd2022-didiei.png")
+          .setTitle("Use esse link para iniciar uma sessão do OpenTogetherTube:\n" + `${roomOTTLink}`)
+          .setFooter({text: "By GD-DIDIEI"})
+          .setColor("#FF0000")
+              ]
+        });
+      } catch(err){
+        console.log(err);
+        message.reply("Ocorreu um erro ao tentar iniciar o Open Together Tube. Tente novamente mais tarde.");
+      }
+    }
   
 }
 
