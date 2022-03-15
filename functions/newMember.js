@@ -70,7 +70,7 @@ async function newMember(client, guildid, member, datafile, botrelease){
         console.log("0 active members in the guild (newMember)");
     }
     client.channels.cache.get(process.env['mainchannel']).send({ content: `<@${member.user.id}>`, embeds: [embed], components: [row] }).then((message) => {
-      user.send(`Eae! blz?!\nPeça para quem te convidou ou algum outro membro autorizar sua entrada no Grupo Disparate clicando no botão verde dessa mensagem: https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}`);
+      user.send(`Eae! blz?!\nPeça para quem te convidou ou algum outro membro autorizar sua entrada no Grupo Disparate clicando no botão verde dessa mensagem: https://discord.com/channels/${message.guildId}/${message.channelId}/${message.id}`).catch(console.error);
       data.memberList[member.user.id].msgId = message.id
       console.log("Saving message id (newMember)");
       saveData(datafile, data);
@@ -126,14 +126,24 @@ function buttonClicked(client, interaction, datafile, guildid){
     } 
 
     //Verification Authorization
-    if(interaction.customId == interaction.user.id) return interaction.reply({content:`<@${interaction.customId}> Você não pode autorizar a si mesmo! Peça para quem te convidou ou para algum outro membro!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+    let rtrn1 = () => {
+      interaction.reply({content:`<@${interaction.customId}> Você não pode autorizar a si mesmo! Peça para quem te convidou ou para algum outro membro!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO NÃO CONCLUÍDA** - O usuário **"${interaction.user.username}" - "<@${interaction.user.id}>"** tentou autorizar a si mesmo.`}).catch(console.error);
+    }
+    if(interaction.customId == interaction.user.id) return rtrn1()
+
+    let rtrn2 = () => {
+      interaction.reply({content:`<@${interaction.customId}> Você ainda não é um membro autorizado do servidor e por isso nao pode autorizar novos membros!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
+      client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO NÃO CONCLUÍDA** - O usuário **"${interaction.user.username}" - "<@${interaction.user.id}>"** tentou autorizar **"${user.user.username}" - "<@${user.id}>"** a ser membro do servidor porem o mesmo ainda não foi autorizado.`}).catch(console.error);
+    }
+    if(!data.memberList[interaction.user.id].authorized) return rtrn2()
 
     if(interaction.user.id !== process.env["ownerid"]){
-      if((data.memberList[interaction.user.id].points < 1) || (data.memberList[interaction.user.id].pointsMax < 1)) return noPoints();
-      function noPoints(){
-        client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO NÃO CONCLUÍDA** - O usuário **"${interaction.user.username}" - "<@${interaction.user.id}>"** tentou autorizar **"${user.user.username}" - "<@${user.id}>"** a ser membro do servidor porem não possuia pontos suficentes. **(PONTOS ATUAIS DO MEMBRO AUTORIZADOR: ${data.memberList[interaction.user.id].points}/${data.memberList[interaction.user.id].pointsMax})**`}).catch(console.error);
+      let rtrn3 = () => {
+        client.channels.cache.get(process.env['logchannel']).send({content:`**AUTORIZAÇÃO NÃO CONCLUÍDA** - O membro **"${interaction.user.username}" - "<@${interaction.user.id}>"** tentou autorizar **"${user.user.username}" - "<@${user.id}>"** a ser membro do servidor porem não possuia pontos suficentes. **(PONTOS ATUAIS DO MEMBRO AUTORIZADOR: ${data.memberList[interaction.user.id].points}/${data.memberList[interaction.user.id].pointsMax})**`}).catch(console.error);
         interaction.reply({content:`<@${interaction.user.id}> Infelizmente você não possui nivel ou tempo no servidor suficiente para autorizar novos membros! Continue ganhando pontos e subindo de nível!`, fetchReply: true}).then(replyMessage => {setTimeout(() => replyMessage.delete(), 15000)}).catch();
       }
+      if((data.memberList[interaction.user.id].points < 1) || (data.memberList[interaction.user.id].pointsMax < 1)) return rtrn3();
     }
 
     //Member authorizating data update

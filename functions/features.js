@@ -128,7 +128,7 @@ async function timerFunctions(client, guildid, datafile){
     counterEmoji = counterEmoji.replace(/8/gi ,"8️⃣");
     counterEmoji = counterEmoji.replace(/9/gi ,"9️⃣");
     const channel = client.channels.cache.get("720275637860040784");
-    channel.setTopic(`Chat geral! Contador de membros: ${counterEmoji}`);
+    channel.setTopic(`Chat geral! Contador de membros: ${counterEmoji}`).catch(console.error);
   }catch(e){console.log(e)}
   }
 

@@ -262,6 +262,16 @@ function updateMemberData(member, data, datafile, botrelease, guildid, client, m
         saveData(datafile, data);
       }
 
+      if(restoreMemberData("authorizedTimeUnix") == null){
+        if(restoreMemberData("authorized")){
+          data.memberList[member.user.id].authorizedTimeUnix = member.joinedTimestamp;
+          console.log("Updating authorizedTimeUnix to joinTimeUnix (data)")
+          saveData(datafile, data);
+        }
+      }
+      
+
+
       var memberdata = {
          "id": member.user.id,
          "user": member.user.username,
