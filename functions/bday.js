@@ -1,44 +1,47 @@
-const {MessageEmbed} = require('discord.js')
-const {loadData, saveData} = require("./data");
-const { bdayMemberCard } = require("./cardMaker");
-const moment = require('moment');
-moment.locale('pt-br');
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-async function bday(client, guildid, datafile, member){
-  try{
-    var todayyear = moment(Date.now()).format('DD/MM/YYYY')
-    var todaymonth = moment(Date.now()).format('DD/MM')
-    if(member.birthday == todaymonth){
-      if(member.bot) return console.log("BOT (bday)");
-      if(member.joinDate == todayyear) return console.log("Joined today (bday)");
-      if(member.lastBdayMsg == todayyear) return console.log("Message alrady sended (bday)");
-      console.log("GDVERSÁRIO de:", member.user)
-      
-      //Send message!
-      const guild = client.guilds.cache.get(guildid);
-      var data = loadData(datafile);
-      var memberData = data.memberList[member.id];
-      if(!memberData) return console.log("Member not found (bday)");
-      const cardImg = await bdayMemberCard(guildid, memberData);
-      const bdayChannelId = process.env['channelbday']; 
-      const cardChannel = guild.channels.cache.get(bdayChannelId);
+const { loadData, saveData } = require('./data')
+const { bdayMemberCard } = require('./cardMaker')
+const moment = require('moment')
+moment.locale('pt-br')
+
+async function bday (client, guildId, dataFile, member) {
+  try {
+    const todayYear = moment(Date.now()).format('DD/MM/YYYY')
+    const todayMonth = moment(Date.now()).format('DD/MM')
+    if (member.birthday === todayMonth) {
+      if (member.bot) return console.log('BOT (bday)')
+      if (member.joinDate === todayYear) return console.log('Joined today (bDay)')
+      if (member.lastBdayMsg === todayYear) return console.log('Message already sended (bday)')
+      console.log('GD-VERSÁRIO de:', member.user)
+
+      // Send message!
+      const guild = client.guilds.cache.get(guildId)
+      const data = loadData(dataFile)
+      const memberData = data.memberList[member.id]
+      if (!memberData) return console.log('Member not found (bday)')
+      const cardImg = await bdayMemberCard(guildId, memberData)
+      const bdayChannelId = process.env.channelBday
+      const cardChannel = guild.channels.cache.get(bdayChannelId)
       await cardChannel.send({
-          content: `<@${member.id}>`,
-          files: [{
-              attachment: cardImg,
-              name: 'card.png' 
-          }]
-      }).catch();
-      data.memberList[member.id].lastBdayMsg = todayyear;
-      data.memberList[member.id].lastBdayMsg = todayyear;
-      console.log("Adding message id to data (newMember)")
-      saveData(datafile, data);
+        content: `<@${member.id}>`,
+        files: [{
+          attachment: cardImg,
+          name: 'card.png'
+        }]
+      }).catch()
+      data.memberList[member.id].lastBdayMsg = todayYear
+      data.memberList[member.id].lastBdayMsg = todayYear
+      console.log('Adding message id to data (newMember)')
+      saveData(dataFile, data)
     }
-  }catch(err){
-    console.log(err);
+  } catch (err) {
+    console.log(err)
   }
 }
 
 module.exports = {
-    bday: bday
-};
+  bday: bday
+}

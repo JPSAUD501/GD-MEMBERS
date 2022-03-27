@@ -1,4 +1,4 @@
-*.json
-*.env
-!spec/*.json
 node_modules
+data.json
+*.env
+*.log
