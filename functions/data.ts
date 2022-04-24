@@ -2,9 +2,11 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-const { timeToString, birthday, daysToBday, age, sinceDays } = require('./moment')
-const fs = require('fs')
-const moment = require('moment')
+import { timeToString, birthday, daysToBday, age, sinceDays } from './moment'
+import fs from 'fs'
+import moment from 'moment'
+import { IData, IMemberData } from '../interfaces/interfaces'
+import { Client, GuildMember } from 'discord.js'
 moment.locale('pt-br')
 
 const lvl01 = '728073881725829182'
@@ -29,11 +31,25 @@ const lvl180 = '830948598510256159'
 const lvl190 = '830948602649640990'
 const lvl200 = '830948607061786674'
 
-function createFile (dataFile) {
+export function createFile (dataFile: string): void {
   fs.writeFileSync(('./' + dataFile), ('{}'))
 }
 
-function loadData (dataFile) {
+export function loadData (dataFile: string): IData {
+  if (!fs.existsSync('./' + (dataFile))) {
+    console.log('Creating file!', dataFile)
+    createFile(dataFile)
+    const dataJson = JSON.parse(fs.readFileSync('./' + (dataFile), 'utf8'))
+    saveData(dataFile, dataJson)
+    const dataJson2 = JSON.parse(fs.readFileSync('./' + (dataFile), 'utf8'))
+    return dataJson2 as IData
+  } else {
+    const dataJson = JSON.parse(fs.readFileSync('./' + (dataFile), 'utf8'))
+    return dataJson as IData
+  }
+}
+
+export function loadDataCustom (dataFile: string) {
   if (!fs.existsSync('./' + (dataFile))) {
     console.log('Creating file!', dataFile)
     createFile(dataFile)
@@ -47,117 +63,118 @@ function loadData (dataFile) {
   }
 }
 
-function saveData (dataFile, data) {
+export function saveData (dataFile: string, data: IData): void {
   fs.writeFileSync('./' + (dataFile), JSON.stringify(data, null, 2))
   const dataVerify = loadData(dataFile)
   fs.writeFileSync('./' + (dataFile), JSON.stringify(dataVerify, null, 2))
   console.log('Saved!', dataFile)
 }
 
-function memberLevel (member) {
+export function memberLevel (member: GuildMember): number {
   if (member.user.id === process.env.ownerId) {
     return 200
-  } else if (member._roles.includes(lvl01)) {
+  } else if (member.roles.cache.has(lvl01)) {
     return 1
-  } else if (member._roles.includes(lvl10)) {
+  } else if (member.roles.cache.has(lvl10)) {
     return 10
-  } else if (member._roles.includes(lvl20)) {
+  } else if (member.roles.cache.has(lvl20)) {
     return 20
-  } else if (member._roles.includes(lvl30)) {
+  } else if (member.roles.cache.has(lvl30)) {
     return 30
-  } else if (member._roles.includes(lvl40)) {
+  } else if (member.roles.cache.has(lvl40)) {
     return 40
-  } else if (member._roles.includes(lvl50)) {
+  } else if (member.roles.cache.has(lvl50)) {
     return 50
-  } else if (member._roles.includes(lvl60)) {
+  } else if (member.roles.cache.has(lvl60)) {
     return 60
-  } else if (member._roles.includes(lvl70)) {
+  } else if (member.roles.cache.has(lvl70)) {
     return 70
-  } else if (member._roles.includes(lvl80)) {
+  } else if (member.roles.cache.has(lvl80)) {
     return 80
-  } else if (member._roles.includes(lvl90)) {
+  } else if (member.roles.cache.has(lvl90)) {
     return 90
-  } else if (member._roles.includes(lvl100)) {
+  } else if (member.roles.cache.has(lvl100)) {
     return 100
-  } else if (member._roles.includes(lvl110)) {
+  } else if (member.roles.cache.has(lvl110)) {
     return 110
-  } else if (member._roles.includes(lvl120)) {
+  } else if (member.roles.cache.has(lvl120)) {
     return 120
-  } else if (member._roles.includes(lvl130)) {
+  } else if (member.roles.cache.has(lvl130)) {
     return 130
-  } else if (member._roles.includes(lvl140)) {
+  } else if (member.roles.cache.has(lvl140)) {
     return 140
-  } else if (member._roles.includes(lvl150)) {
+  } else if (member.roles.cache.has(lvl150)) {
     return 150
-  } else if (member._roles.includes(lvl160)) {
+  } else if (member.roles.cache.has(lvl160)) {
     return 160
-  } else if (member._roles.includes(lvl170)) {
+  } else if (member.roles.cache.has(lvl170)) {
     return 170
-  } else if (member._roles.includes(lvl180)) {
+  } else if (member.roles.cache.has(lvl180)) {
     return 180
-  } else if (member._roles.includes(lvl190)) {
+  } else if (member.roles.cache.has(lvl190)) {
     return 190
-  } else if (member._roles.includes(lvl200)) {
+  } else if (member.roles.cache.has(lvl200)) {
     return 200
   } else {
     return 0
   }
 }
 
-function updateMemberData (member, data, dataFile, botRelease, guildId, client, memberCounterNumber) {
-  function restoreMemberData (name) {
+export function updateMemberData (member: GuildMember, data: IData, dataFile: string, botRelease: number, client: Client): IData | void {
+  function restoreMemberData (objName: string): boolean | string | number | null {
     data = loadData(dataFile)
-    if (name in data.memberList[member.user.id]) {
-      return (data.memberList[member.user.id])[name]
+    if (objName in data.memberList[member.user.id]) {
+      const memberData = data.memberList[member.user.id]
+      return (data.memberList[member.user.id])[objName as keyof typeof memberData]
     } else {
       return null
     }
   }
 
-  function pointsMaxLvl (member) {
-    if (member._roles.includes('721089379547873340')) {
+  function pointsMaxLvl (member: GuildMember): number {
+    if (member.roles.cache.has('721089379547873340')) {
       return 8
-    } else if (member._roles.includes(lvl01)) {
+    } else if (member.roles.cache.has(lvl01)) {
       return 0
-    } else if (member._roles.includes(lvl10)) {
+    } else if (member.roles.cache.has(lvl10)) {
       return 1
-    } else if (member._roles.includes(lvl20)) {
+    } else if (member.roles.cache.has(lvl20)) {
       return 1
-    } else if (member._roles.includes(lvl30)) {
+    } else if (member.roles.cache.has(lvl30)) {
       return 1
-    } else if (member._roles.includes(lvl40)) {
+    } else if (member.roles.cache.has(lvl40)) {
       return 2
-    } else if (member._roles.includes(lvl50)) {
+    } else if (member.roles.cache.has(lvl50)) {
       return 2
-    } else if (member._roles.includes(lvl60)) {
+    } else if (member.roles.cache.has(lvl60)) {
       return 3
-    } else if (member._roles.includes(lvl70)) {
+    } else if (member.roles.cache.has(lvl70)) {
       return 3
-    } else if (member._roles.includes(lvl80)) {
+    } else if (member.roles.cache.has(lvl80)) {
       return 4
-    } else if (member._roles.includes(lvl90)) {
+    } else if (member.roles.cache.has(lvl90)) {
       return 4
-    } else if (member._roles.includes(lvl100)) {
+    } else if (member.roles.cache.has(lvl100)) {
       return 5
-    } else if (member._roles.includes(lvl110)) {
+    } else if (member.roles.cache.has(lvl110)) {
       return 5
-    } else if (member._roles.includes(lvl120)) {
+    } else if (member.roles.cache.has(lvl120)) {
       return 6
-    } else if (member._roles.includes(lvl130)) {
+    } else if (member.roles.cache.has(lvl130)) {
       return 6
-    } else if (member._roles.includes(lvl140)) {
+    } else if (member.roles.cache.has(lvl140)) {
       return 7
-    } else if (member._roles.includes(lvl150)) {
+    } else if (member.roles.cache.has(lvl150)) {
       return 7
-    } else if (member._roles.includes(lvl160)) {
+    } else if (member.roles.cache.has(lvl160)) {
       return 8
-    } else if (member._roles.includes(lvl170)) {
+    } else if (member.roles.cache.has(lvl170)) {
       return 8
-    } else if (member._roles.includes(lvl180)) {
+    } else if (member.roles.cache.has(lvl180)) {
       return 8
-    } else if (member._roles.includes(lvl190)) {
+    } else if (member.roles.cache.has(lvl190)) {
       return 8
-    } else if (member._roles.includes(lvl200)) {
+    } else if (member.roles.cache.has(lvl200)) {
       return 8
     } else {
       return 0
@@ -171,13 +188,11 @@ function updateMemberData (member, data, dataFile, botRelease, guildId, client, 
   }
 
   if (!(member.user.id in data.memberList)) {
-    data.memberList[member.user.id] = {}
-    saveData(dataFile, data)
-    console.log('Creating new member data in json (data)')
+    console.log('New member data in json (data)')
   }
 
   if (restoreMemberData('authorized') == null) {
-    if (member._roles.includes('721660842176806965')) {
+    if (member.roles.cache.has('721660842176806965')) {
       data.memberList[member.user.id].authorized = true
       console.log('Authorized = null updating to true (data)')
       saveData(dataFile, data)
@@ -188,6 +203,7 @@ function updateMemberData (member, data, dataFile, botRelease, guildId, client, 
     }
   }
 
+  if (!member.joinedTimestamp) return console.log('No joined timestamp (data)')
   if ((member.joinedTimestamp < botRelease) || member.user.bot) {
     if (restoreMemberData('authorized') !== true || restoreMemberData('legacyMember') !== true) {
       data.memberList[member.user.id].authorized = true
@@ -198,8 +214,10 @@ function updateMemberData (member, data, dataFile, botRelease, guildId, client, 
       saveData(dataFile, data)
     }
   } else if (restoreMemberData('authorized') === true && (restoreMemberData('authorizedById') == null)) {
-    data.memberList[member.user.id].authorizedById = client.user.id
-    data.memberList[member.user.id].authorizedByName = client.user.username
+    const clientUser = client.user
+    if (!clientUser) return console.log('No client user (data)')
+    data.memberList[member.user.id].authorizedById = clientUser.id
+    data.memberList[member.user.id].authorizedByName = clientUser.username
     data.memberList[member.user.id].legacyMember = false
     console.log('Member missing authorizedById updating to bot id and name (data)')
     saveData(dataFile, data)
@@ -239,25 +257,34 @@ function updateMemberData (member, data, dataFile, botRelease, guildId, client, 
 
   if (restoreMemberData('pointsLastDayUpdate') !== moment(Date.now()).format('DD/MM/YYYY')) {
     data.memberList[member.user.id].pointsLastDayUpdate = moment(Date.now()).format('DD/MM/YYYY')
-    if (restoreMemberData('points') !== null) {
-      if (restoreMemberData('points') < restoreMemberData('pointsMax')) {
-        data.memberList[member.user.id].points = restoreMemberData('points') + 1
+    const points = restoreMemberData('points')
+    if (!points) return console.log('No points (data)')
+    if (points !== null) {
+      const pointsMax = restoreMemberData('pointsMax')
+      if (!pointsMax) return console.log('No pointsMax (data)')
+      if (points < pointsMax) {
+        data.memberList[member.user.id].points = points as number + 1
       }
     } else {
-      data.memberList[member.user.id].points = restoreMemberData('pointsMax')
+      const points = restoreMemberData('pointsMax') as number
+      data.memberList[member.user.id].points = points
     }
     console.log('Updating pointsLastDayUpdate and points (data)')
     saveData(dataFile, data)
   }
 
-  if (restoreMemberData('points') == null) {
-    data.memberList[member.user.id].points = restoreMemberData('pointsMax')
+  const points = restoreMemberData('points')
+  if (!points) return console.log('No points (data)')
+  const pointsMax = restoreMemberData('pointsMax')
+  if (!pointsMax) return console.log('No pointsMax (data)')
+  if (points == null) {
+    data.memberList[member.user.id].points = pointsMax as number
     console.log('Updating null points (data)')
     saveData(dataFile, data)
   }
 
-  if (restoreMemberData('points') > restoreMemberData('pointsMax')) {
-    data.memberList[member.user.id].points = restoreMemberData('pointsMax')
+  if (points > pointsMax) {
+    data.memberList[member.user.id].points = pointsMax as number
     console.log('Points > PointsMax - Updating to max (data)')
     saveData(dataFile, data)
   }
@@ -270,31 +297,31 @@ function updateMemberData (member, data, dataFile, botRelease, guildId, client, 
     }
   }
 
-  const memberData = {
+  const memberData: IMemberData = {
     id: member.user.id,
     user: member.user.username,
-    noob: (!member._roles.includes('721660842176806965')),
+    noob: (!member.roles.cache.has('721660842176806965')),
     bot: member.user.bot,
-    birthday: birthday(member.joinedTimestamp),
-    lastBdayMsg: restoreMemberData('lastBdayMsg'),
-    age: age(member.joinedTimestamp),
-    memberSinceDays: sinceDays(member.joinedTimestamp),
-    memberSincePlusTime: sinceDays(member.joinedTimestamp) + parseFloat(0.235959 - parseFloat(moment(member.joinedTimestamp).format('HHmmss')) / 1000000),
-    daysToBday: daysToBday(member.joinedTimestamp),
+    birthday: birthday(member.joinedTimestamp as number),
+    lastBdayMsg: restoreMemberData('lastBdayMsg') as string,
+    age: age(member.joinedTimestamp as number),
+    memberSinceDays: sinceDays(member.joinedTimestamp as number),
+    memberSincePlusTime: sinceDays(member.joinedTimestamp as number) + parseFloat((0.235959 - parseFloat(moment(member.joinedTimestamp).format('HHmmss')) / 1000000).toString()),
+    daysToBday: daysToBday(member.joinedTimestamp as number),
     joinTimeUnix: member.joinedTimestamp,
     joinDate: moment(member.joinedTimestamp).format('DD/MM/YYYY'),
     joinTime: moment(member.joinedTimestamp).format('HH:mm:ss'),
-    joinString: timeToString(member.joinedTimestamp),
-    authorized: restoreMemberData('authorized'),
-    authorizedTimeUnix: restoreMemberData('authorizedTimeUnix'),
-    authorizedById: restoreMemberData('authorizedById'),
-    authorizedByName: restoreMemberData('authorizedByName'),
-    pointsMax: restoreMemberData('pointsMax'),
-    points: restoreMemberData('points'),
-    pointsLastDayUpdate: restoreMemberData('pointsLastDayUpdate'),
-    legacyMember: restoreMemberData('legacyMember'),
+    joinString: timeToString(member.joinedTimestamp as number),
+    authorized: restoreMemberData('authorized') as boolean,
+    authorizedTimeUnix: restoreMemberData('authorizedTimeUnix') as number,
+    authorizedById: restoreMemberData('authorizedById') as string,
+    authorizedByName: restoreMemberData('authorizedByName') as string,
+    pointsMax: restoreMemberData('pointsMax') as number,
+    points: restoreMemberData('points') as number,
+    pointsLastDayUpdate: restoreMemberData('pointsLastDayUpdate') as string,
+    legacyMember: restoreMemberData('legacyMember') as boolean,
     avatarUrl: member.displayAvatarURL(),
-    msgId: restoreMemberData('msgId')
+    msgId: restoreMemberData('msgId') as string
   }
 
   if (JSON.stringify(memberData) !== JSON.stringify(data.memberList[member.user.id])) {
@@ -303,17 +330,12 @@ function updateMemberData (member, data, dataFile, botRelease, guildId, client, 
     saveData(dataFile, data)
   }
 
-  if (memberData.authorized === true && !member._roles.includes('721660842176806965') && !member._roles.includes('721650485131477005')) {
+  if (memberData.authorized === true && !member.roles.cache.has('721660842176806965') && !member.roles.cache.has('721650485131477005')) {
     console.log('Add MEMBER role to member! (data)')
     const role = member.guild.roles.cache.get('721660842176806965')
+    if (!role) return console.log('No MEMBER role! (data)')
     member.roles.add(role)
   }
-}
 
-module.exports = {
-  createFile: createFile,
-  loadData: loadData,
-  saveData: saveData,
-  memberLevel: memberLevel,
-  updateMemberData: updateMemberData
+  return data
 }

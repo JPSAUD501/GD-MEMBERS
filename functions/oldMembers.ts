@@ -2,12 +2,15 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-const { saveData } = require('./data')
+import { Client, TextChannel } from 'discord.js'
+import { IData } from '../interfaces/interfaces'
+import { saveData } from './data'
 
-function deleteFromList (dataFile, data, guildId, client) {
+export function deleteFromList (dataFile: string, data: IData, guildId: string, client: Client) {
   const guild = client.guilds.cache.get(guildId)
   const list = Object.keys(data.memberList)
-  const allMembers = []
+  const allMembers: string[] = []
+  if (!guild) return console.log('Guild not found')
   guild.members.cache.each(member => {
     allMembers.push(member.id)
   })
@@ -15,16 +18,14 @@ function deleteFromList (dataFile, data, guildId, client) {
     if (!allMembers.includes(list[i])) {
       console.log(data.memberList[list[i]])
       if (data.memberList[list[i]].msgId) {
+        if (!process.env.mainChannel) return console.log('mainChannel not found')
         const channel = guild.channels.cache.get(process.env.mainChannel)
-        try { channel.fetchMessage(data.memberList[list[i]].msgId).then(msg => msg.delete()) } catch {}
+        if (!(channel instanceof TextChannel)) return console.log('Channel is not a text channel!')
+        try { channel.messages.fetch(data.memberList[list[i]].msgId).then(msg => msg.delete()) } catch {}
       }
       delete data.memberList[list[i]]
       console.log('Deleting old member from data (oldMember)')
       saveData(dataFile, data)
     }
   }
-}
-
-module.exports = {
-  deleteFromList: deleteFromList
 }

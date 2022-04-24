@@ -2,12 +2,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-const { loadData, saveData } = require('./data')
-const { bdayMemberCard } = require('./cardMaker')
-const moment = require('moment')
-moment.locale('pt-br')
+import { loadData, saveData } from './data'
+import { bdayMemberCard } from './cardMaker'
+import moment, { locale } from 'moment'
+import { Client } from 'discord.js'
+import { IMemberData } from '../interfaces/interfaces'
+locale('pt-br')
 
-async function bday (client, guildId, dataFile, member) {
+export async function bday (client: Client, guildId: string, dataFile: string, member: IMemberData): Promise<void> {
   try {
     const todayYear = moment(Date.now()).format('DD/MM/YYYY')
     const todayMonth = moment(Date.now()).format('DD/MM')
@@ -19,12 +21,17 @@ async function bday (client, guildId, dataFile, member) {
 
       // Send message!
       const guild = client.guilds.cache.get(guildId)
+      if (!guild) return console.log('Guild not found!')
       const data = loadData(dataFile)
       const memberData = data.memberList[member.id]
       if (!memberData) return console.log('Member not found (bday)')
-      const cardImg = await bdayMemberCard(guildId, memberData)
+      const cardImg = await bdayMemberCard(memberData)
+      if (!(cardImg instanceof Buffer)) return console.log('Card is not a buffer (bday)')
       const bdayChannelId = process.env.channelBday
+      if (!bdayChannelId) return console.log('Channel not found (bday)')
       const cardChannel = guild.channels.cache.get(bdayChannelId)
+      if (!cardChannel) return console.log('Channel not found (bday)')
+      if (!cardChannel.isText()) return console.log('Channel is not text (bday)')
       await cardChannel.send({
         content: `<@${member.id}>`,
         files: [{
@@ -40,8 +47,4 @@ async function bday (client, guildId, dataFile, member) {
   } catch (err) {
     console.log(err)
   }
-}
-
-module.exports = {
-  bday: bday
 }

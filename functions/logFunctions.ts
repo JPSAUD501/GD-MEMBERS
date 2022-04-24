@@ -2,28 +2,38 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-const { newMemberCard } = require('./cardMaker')
+import { Client, GuildMember, PartialGuildMember, TextChannel } from 'discord.js'
+import { newMemberCard } from './cardMaker'
 
-async function memberExitedLog (client, guildId, member) {
+export async function memberExitedLog (client: Client, guildId: string, member: GuildMember | PartialGuildMember) {
   if (member.guild.id !== guildId) return
   if (member.user.bot) return
   const guild = client.guilds.cache.get(guildId)
+  if (!guild) return console.log('Guild not found! (memberExitedLog)')
   const logChannelId = process.env.eventsChannel
+  if (!logChannelId) return console.log('No log channel found! (memberExitedLog)')
   const logChannel = guild.channels.cache.get(logChannelId)
+  if (!(logChannel instanceof TextChannel)) return console.log('Channel is not a text channel! (memberExitedLog)')
   await logChannel.send(`O membro **"${member.user.username}" - "${member.user.toString()}"** acabou de sair do servidor.`).catch()
 };
 
-async function memberJoinedLog (client, guildId, member) {
+export async function memberJoinedLog (client: Client, guildId: string, member: GuildMember) {
   try {
     if (member.guild.id !== guildId) return
     if (member.user.bot) return
     const guild = client.guilds.cache.get(guildId)
+    if (!guild) return console.log('Guild not found! (memberExitedLog)')
     const logChannelId = process.env.eventsChannel
+    if (!logChannelId) return console.log('No log channel found! (memberExitedLog)')
     const logChannel = guild.channels.cache.get(logChannelId)
+    if (!(logChannel instanceof TextChannel)) return console.log('Channel is not a text channel! (memberJoinedLog)')
     await logChannel.send(`O membro **"${member.user.username}" - "${member.user.toString()}"** acabou de entrar no servidor.`).catch()
     const cardImg = await newMemberCard(guildId, member)
+    if (!(cardImg instanceof Buffer)) return console.log('Card is not a buffer! (memberJoinedLog)')
     const cardChannelId = process.env.historyChannel
+    if (!cardChannelId) return console.log('No card channel found! (memberJoinedLog)')
     const cardChannel = guild.channels.cache.get(cardChannelId)
+    if (!(cardChannel instanceof TextChannel)) return console.log('Channel is not a text channel! (memberJoinedLog)')
     await cardChannel.send({
       files: [{
         attachment: cardImg,
@@ -34,9 +44,4 @@ async function memberJoinedLog (client, guildId, member) {
   } catch (err) {
     console.log(err)
   }
-};
-
-module.exports = {
-  memberExitedLog: memberExitedLog,
-  memberJoinedLog: memberJoinedLog
 }

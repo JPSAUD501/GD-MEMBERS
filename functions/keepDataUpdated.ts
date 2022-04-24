@@ -2,13 +2,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-const { loadData, saveData, updateMemberData } = require('./data')
-const { bday } = require('./bday')
-const { deleteFromList } = require('./oldMembers')
-const moment = require('moment')
+import { loadData, saveData, updateMemberData } from './data'
+import { bday } from './bday'
+import { deleteFromList } from './oldMembers'
+import moment from 'moment'
+import { Client, TextChannel } from 'discord.js'
 moment.locale('pt-br')
 
-async function keepDataUpdated (client, botRelease, guildId, dataFile) {
+export async function keepDataUpdated (client: Client, botRelease: number, guildId: string, dataFile: string) {
   // saveData("./poi/poi.json", {"text": "Aguardando rodada..."});
 
   async function checkEveryMinute () {
@@ -20,10 +21,11 @@ async function keepDataUpdated (client, botRelease, guildId, dataFile) {
       // New day! Checking everything and send messages!
       const guild = client.guilds.cache.get(guildId)
       let memberCounterNumber = 0
+      if (!guild) return console.log('Guild not found!')
       guild.members.cache.each(member => {
         memberCounterNumber++
         console.log(memberCounterNumber, 'Members')
-        updateMemberData(member, data, dataFile, botRelease, guildId, client, memberCounterNumber)
+        updateMemberData(member, data, dataFile, botRelease, client)
       })
 
       data = loadData(dataFile)
@@ -55,14 +57,13 @@ async function keepDataUpdated (client, botRelease, guildId, dataFile) {
       }
 
       // BKP data.json
-      client.channels.cache.get(process.env.channelBkp).send({ content: `BKP - ${moment(Date.now()).format('DD/MM/YYYY')}`, files: ['./' + dataFile] })
+      if (!process.env.channelBkp) return console.log('Channel not found (bkp)')
+      const channel = client.channels.cache.get(process.env.channelBkp)
+      if (!(channel instanceof TextChannel)) return console.log('Channel is not a text channel!')
+      channel.send({ content: `BKP - ${moment(Date.now()).format('DD/MM/YYYY')}`, files: ['./' + dataFile] })
     }
   }
 
   checkEveryMinute()
-  setInterval(function () { checkEveryMinute() }, 60000)
-}
-
-module.exports = {
-  keepDataUpdated: keepDataUpdated
+  setInterval(function (): void { checkEveryMinute() }, 60000)
 }

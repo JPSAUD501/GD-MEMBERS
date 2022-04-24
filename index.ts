@@ -2,27 +2,26 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-require('dotenv').config()
-const { keepDataUpdated } = require('./functions/keepDataUpdated')
-const { newMember, buttonClicked } = require('./functions/newMember')
-const { timerFunctions, commands } = require('./functions/features')
-const { inviteChecker, checkAllInvites, inviteDeleted } = require('./functions/invites')
-const { afkCheck, afk, afkTyping, afkNewState } = require('./functions/gd-afk')
-const { newPrivateGuildMember, oldPrivateGuildMember, privateGuildCommand } = require('./functions/privateGuilds')
-const { channelName } = require('./functions/channelName')
-const { memberExitedLog, memberJoinedLog } = require('./functions/logFunctions')
-const Discord = require('discord.js')
+import { keepDataUpdated } from './functions/keepDataUpdated'
+import { newMember, buttonClicked } from './functions/newMember'
+import { timerFunctions, commands } from './functions/features'
+import { inviteChecker, checkAllInvites, inviteDeleted } from './functions/invites'
+import { afkCheck, afk, afkTyping, afkNewState } from './functions/gd-afk'
+import { newPrivateGuildMember, oldPrivateGuildMember, privateGuildCommand } from './functions/privateGuilds'
+import { channelName } from './functions/channelName'
+import { memberExitedLog, memberJoinedLog } from './functions/logFunctions'
+import Discord from 'discord.js'
+import dotenv from 'dotenv'
 const botRelease = 1634452922000
 const guildId = '720275637415182416'
 const dataFile = './data.json'
-const prefix = '/'
+
+dotenv.config()
 
 const client = new Discord.Client({
-  fetchAllMembers: true,
   restTimeOffset: 0,
   shards: 'auto',
   restWsBridgeTimeout: 100,
-  disableEveryone: true,
   partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
   intents: [
     'GUILDS',
@@ -67,7 +66,7 @@ client.on('interactionCreate', async interaction => {
 })
 
 client.on('messageCreate', async message => {
-  commands(client, message, prefix, guildId, dataFile)
+  commands(client, message, guildId, dataFile)
 })
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
@@ -95,7 +94,7 @@ client.on('guildMemberRemove', async member => {
 })
 
 client.on('messageCreate', async message => {
-  privateGuildCommand(client, message, prefix, guildId)
+  privateGuildCommand(message, guildId)
 })
 
 client.on('error', () => { client.login(process.env.token) })
