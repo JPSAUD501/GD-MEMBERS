@@ -99,7 +99,7 @@ export async function afkNewState (oldState: VoiceState, newState: VoiceState, c
   } catch (e) { console.log(e, '(gd-afk)') }
 }
 
-export async function afk (oldState: VoiceState, newState: VoiceState, client: Client, guildId: string) {
+export async function afk (oldState: VoiceState, newState: VoiceState, client: Client, guildId: string): Promise<void> {
   try {
     if (oldState.guild.id !== guildId) return
     if (newState.guild.id !== guildId) return
@@ -127,11 +127,11 @@ export async function afk (oldState: VoiceState, newState: VoiceState, client: C
       if (afkMember.roles.cache.has('911500333115637791')) {
         console.log('Back it to call (gd-afk)')
         await delay(1000)
-        let oldChannel = null
         const oSC = oldState.channel
-        if (!oSC) return console.log('oSC not found! (gd-afk)')
-        try { oldChannel = await guild.channels.cache.get(oSC.id) } catch (e) {}
-        if (oldChannel && oldChannel.deleted === false) {
+        if (!oSC) return privateAfk()
+        let oldChannel = null
+        try { oldChannel = guild.channels.cache.get(oSC.id) } catch (e) {}
+        if (oldChannel) {
           console.log('OldChannel ok! (gd-afk)')
           if (!afkMember.nickname) {
             try { await afkMember.setNickname(afkMember.user.username + ' ' + afkTag) } catch (e) {}
