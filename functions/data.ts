@@ -188,7 +188,9 @@ export function updateMemberData (member: GuildMember, data: IData, dataFile: st
   }
 
   if (!(member.user.id in data.memberList)) {
+    data.memberList[member.user.id] = {} as IMemberData
     console.log('New member data in json (data)')
+    saveData(dataFile, data)
   }
 
   if (restoreMemberData('authorized') == null) {
