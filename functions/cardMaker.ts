@@ -26,7 +26,7 @@ export async function newMemberCard (guildId: string, member: GuildMember): Prom
       content: {
         name: memberName,
         imageUrl: member.displayAvatarURL(),
-        color1: randomColor({
+        color: randomColor({
           luminosity: 'dark',
           format: 'rgba',
           hue: hueColor,
@@ -57,7 +57,7 @@ export async function bdayMemberCard (memberData: IMemberData): Promise<string |
       content: {
         name: memberName,
         imageUrl: memberData.avatarUrl,
-        color1: randomColor({
+        color: randomColor({
           luminosity: 'dark',
           format: 'rgba',
           hue: hueColor,

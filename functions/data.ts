@@ -259,11 +259,9 @@ export function updateMemberData (member: GuildMember, data: IData, dataFile: st
 
   if (restoreMemberData('pointsLastDayUpdate') !== moment(Date.now()).format('DD/MM/YYYY')) {
     data.memberList[member.user.id].pointsLastDayUpdate = moment(Date.now()).format('DD/MM/YYYY')
-    const points = restoreMemberData('points')
-    if (!points) return console.log('No points (data)')
+    const points = restoreMemberData('points') as number
     if (points !== null) {
-      const pointsMax = restoreMemberData('pointsMax')
-      if (!pointsMax) return console.log('No pointsMax (data)')
+      const pointsMax = restoreMemberData('pointsMax') as number
       if (points < pointsMax) {
         data.memberList[member.user.id].points = points as number + 1
       }
@@ -275,10 +273,8 @@ export function updateMemberData (member: GuildMember, data: IData, dataFile: st
     saveData(dataFile, data)
   }
 
-  const points = restoreMemberData('points')
-  if (!points) return console.log('No points (data)')
-  const pointsMax = restoreMemberData('pointsMax')
-  if (!pointsMax) return console.log('No pointsMax (data)')
+  const points = restoreMemberData('points') as number
+  const pointsMax = restoreMemberData('pointsMax') as number
   if (points == null) {
     data.memberList[member.user.id].points = pointsMax as number
     console.log('Updating null points (data)')

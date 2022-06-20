@@ -8,7 +8,8 @@ import axios from 'axios'
 export async function newPrivateGuildMember (client: Client, guildId: string, member: GuildMember) {
   if (member.guild.id === guildId) return
   const guild = client.guilds.cache.get(guildId)
-  const joinedMember = await member.guild.members.fetch(member.id).catch()
+  if (!guild) return console.log('No (guild) private guild!')
+  const joinedMember = await guild.members.fetch(member.id).catch()
   if (!joinedMember || !joinedMember.roles) {
     await member.send('Você precisa ser um membro autorizado do Grupo Disparate para poder entrar em um servidor privado. Para isso acesse o link a seguir e peça para quem te convidou para o servidor privado autorizar seu pedido para se tornar membro no Grupo Disparate!\nhttps://discord.gg/dvHU2rupA2')
     const embed = new MessageEmbed()
@@ -23,7 +24,7 @@ export async function newPrivateGuildMember (client: Client, guildId: string, me
     if (!guild) return console.log('Guild not found (newPrivateGuildMember)')
     await mainChatChannel.send({ content: `${guild.roles.everyone}`, embeds: [embed] }).catch(console.error)
     member.kick().catch(console.error)
-    console.log('Member joined DENIED in private guild (privateGuilds)')
+    console.log('Member joined DENIED 1 in private guild (privateGuilds)')
   } else if (!joinedMember.roles.cache.has('721660842176806965')) {
     await member.send('Você precisa ser um membro autorizado do Grupo Disparate para poder entrar em um servidor privado. Para isso acesse o link a seguir e peça para quem te convidou para o servidor privado autorizar seu pedido para se tornar membro no Grupo Disparate!\nhttps://discord.gg/dvHU2rupA2')
     const embed = new MessageEmbed()
@@ -38,7 +39,7 @@ export async function newPrivateGuildMember (client: Client, guildId: string, me
     if (!guild) return console.log('Guild not found (newPrivateGuildMember)')
     await mainChatChannel.send({ content: `${guild.roles.everyone}`, embeds: [embed] }).catch(console.error)
     member.kick().catch(console.error)
-    console.log('Member joined DENIED in private guild (privateGuilds)')
+    console.log('Member joined DENIED 2 in private guild (privateGuilds)')
   } else {
     console.log('Member joined OK in private guild (privateGuilds)')
     if (member.user.id === process.env.ownerId) {

@@ -347,6 +347,7 @@ export async function commands (client: Client, message: Message, guildId: strin
 
         // Emoji and text
         let match = msg[1].match(regex)
+        console.log(match)
         if (!match) return message.reply({ content: 'O emoji que você escolheu não é válido. Tente novamente.' }).catch(console.error)
         let textArray: string[] = []
         if (!match) {
@@ -364,7 +365,7 @@ export async function commands (client: Client, message: Message, guildId: strin
 
         // Text
         const textString = textArray.join(' ')
-        if (textString.length > 10) return message.reply({ content: 'O campo de nome não pode ter mais de 15 caracteres. Para usar esse comando mande **/callname (emoji) (nome)**.' }).catch(console.error)
+        if (textString.length > 12) return message.reply({ content: 'O campo de nome não pode ter mais de 12 caracteres. Para usar esse comando mande **/callname (emoji) (nome)**.' }).catch(console.error)
 
         // Name
         const name = emoji + '┊' + textString

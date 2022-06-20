@@ -18,7 +18,7 @@ export async function newMember (client: Client, guildId: string, member: GuildM
     saveData(dataFile, data)
   }
   const uMD = updateMemberData(member, data, dataFile, botRelease, client)
-  if (!uMD) return console.log('Member data not updated! (newMember)')
+  if (!uMD) return console.log('Member data not updated (Error)! (newMember)')
   data = uMD
   console.log('Saving new member data! (newMember)')
 
